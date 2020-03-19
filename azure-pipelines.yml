@@ -36,6 +36,16 @@ steps:
   displayName: 'Set subscription account'
 
 - script: |
+   az group create -n $(resourcegroup) -l "eastus"
+   
+  displayName: 'Creating Resource Group'
+  
+- script: |
+   az storage account create -n S(storageacct) -g $(resourcegroup) -l eastus --sku Standard_LRS
+   
+  displayName: 'Creating Storage Account'
+  
+- script: |
    az acr create --name $(contreg) --resource-group $(resourcegroup) --sku Standard
    
   displayName: 'Creating Container Registry'
