@@ -11,7 +11,6 @@ variables:
 trigger:
 - master
 - releases/*
-- develop
 
 steps:
 - task: UsePythonVersion@0
@@ -37,12 +36,17 @@ steps:
 	displayName: 'Set subscription account'
 	
 - script: |
-	az ml workspace create --workspace-name $workspacename --application-insights $appinsight --container-registry $contreg --keyvault $keyvault --location "eastus" --resource-group $resourcegroup --sku "enterprise" --storage-account $storageacct --exist-ok
+	az acr create --resource-$(resourcegroup) --name $(contreg) --sku Standard
+	
+	displayName: 'Creating Container Registry'
+	
+- script: |
+	az ml workspace create --workspace-name $(workspacename) --application-insights $(appinsight) --container-registry $(contreg) --keyvault $(keyvault) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --storage-account $(storageacct) --exist-ok
 	
 	displayName: 'Get or Create Workspace'
 	
 - script: |
-	az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $computename --vm-size "STANDARD_D2_V2" --resource-group $resourcegroup --workspace-name $workspacename
+	az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $(computename) --vm-size $(vmSize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
 	
 	displayName: 'Create AML Compute'
 	
