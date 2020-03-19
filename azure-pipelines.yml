@@ -48,5 +48,3 @@ steps:
 	az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $(computename) --vm-size $(vmSize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
 	
 	displayName: 'Create AML Compute'
-	
-	
