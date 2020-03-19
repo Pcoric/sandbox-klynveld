@@ -32,19 +32,19 @@ steps:
 - script: |
     az account set -s $(subscriptionid)
 	
-	displayName: 'Set subscription account'
+displayName: 'Set subscription account'
 	
 - script: |
-	az acr create --resource-$(resourcegroup) --name $(contreg) --sku Standard
+    az acr create --resource-$(resourcegroup) --name $(contreg) --sku Standard
 	
-	displayName: 'Creating Container Registry'
-	
-- script: |
-	az ml workspace create --workspace-name $(workspacename) --application-insights $(appinsight) --container-registry $(contreg) --keyvault $(keyvault) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --storage-account $(storageacct) --exist-ok
-	
-	displayName: 'Get or Create Workspace'
+    displayName: 'Creating Container Registry'
 	
 - script: |
-	az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $(computename) --vm-size $(vmSize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
+    az ml workspace create --workspace-name $(workspacename) --application-insights $(appinsight) --container-registry $(contreg) --keyvault $(keyvault) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --storage-account $(storageacct) --exist-ok
 	
-	displayName: 'Create AML Compute'
+    displayName: 'Get or Create Workspace'
+	
+- script: |
+    az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $(computename) --vm-size $(vmSize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
+    
+    displayName: 'Create AML Compute'
