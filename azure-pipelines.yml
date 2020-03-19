@@ -36,7 +36,7 @@ steps:
   displayName: 'Set subscription account'
 
 - script: |
-   az acr create --name $(contreg) --resource-group -$(resourcegroup) --sku Standard
+   az acr create --name $(contreg) --resource-group $(resourcegroup) --sku Standard
    
   displayName: 'Creating Container Registry'
 
