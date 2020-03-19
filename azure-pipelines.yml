@@ -30,7 +30,7 @@ steps:
   displayName: 'Login to Azure'
   
 - script: |
-	az account set -s $(subscriptionid)
+    az account set -s $(subscriptionid)
 	
 	displayName: 'Set subscription account'
 	
