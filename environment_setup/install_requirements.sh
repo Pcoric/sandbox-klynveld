@@ -26,6 +26,6 @@
 
 
 python --version
-pip install azure-cli==2.0.49
+pip install --upgrade azure-cli==2.0.80
 pip install --upgrade azureml-sdk[cli]
 pip install -r requirements.txt
