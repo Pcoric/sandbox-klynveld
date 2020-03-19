@@ -10,7 +10,6 @@ variables:
 
 trigger:
 - master
-- releases/*
 
 steps:
 - task: UsePythonVersion@0
