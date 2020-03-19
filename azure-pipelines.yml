@@ -41,7 +41,7 @@ steps:
   displayName: 'Creating Resource Group'
   
 - script: |
-   az storage account create -n S(storageacct) -g $(resourcegroup) -l eastus --sku Standard_LRS
+   az storage account create -n $(storageacct) -g $(resourcegroup) -l "eastus" --sku Standard_LRS
    
   displayName: 'Creating Storage Account'
   
