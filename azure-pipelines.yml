@@ -39,19 +39,9 @@ steps:
    az group create -n $(resourcegroup) -l "eastus"
    
   displayName: 'Creating Resource Group'
-  
-- script: |
-   az storage account create -n $(storageacct) -g $(resourcegroup) -l "eastus" --sku Standard_LRS
-   
-  displayName: 'Creating Storage Account'
-  
-- script: |
-   az acr create --name $(contreg) --resource-group $(resourcegroup) --sku Standard
-   
-  displayName: 'Creating Container Registry'
 
 - script: |
-   az ml workspace create --workspace-name $(workspacename) --application-insights $(appinsight) --container-registry $(contreg) --keyvault $(keyvault) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --storage-account $(storageacct) --exist-ok
+   az ml workspace create --workspace-name $(workspacename) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --exist-ok
    
   displayName: 'Get or Create Workspace'
 
