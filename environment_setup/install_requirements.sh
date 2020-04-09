@@ -26,6 +26,7 @@
 
 
 python --version
+az --version
 pip install --upgrade azure-cli==2.0.80
 pip install --upgrade azureml-sdk[cli]
 az extension add -n azure-cli-ml
