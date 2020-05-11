@@ -1,0 +1,112 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+#Your build pipeline references a secret variable named ‘sp_username’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references a secret variable named ‘sp_password’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+
+# Azure Pipeline Definition for Infrastructure Deployment
+name: Deploy AML Infrastructure
+
+# Trigger on changes in the infrastructure folder and on the master branch                      
+trigger:
+  branches:
+    include:
+    - master
+
+  paths:
+    include:
+    - infra-as-code/*
+    - parameters/*
+
+parameters:
+- name: baseName
+  type: string
+  default: pav
+- name: environment
+  type: string
+  default: dev
+  values: 
+  - test
+  - dev
+- name: location
+  type: string
+  default: eastus
+- name: serviceConnection
+  type: string
+  default: pav-svc
+- name: workspacename
+  type: string
+  default: mls
+- name: computename
+  type: string
+  default: traincompute
+- name: applicationinsights
+  type: string
+  default: ain
+- name: storageaccount
+  type: string
+  default: sa
+- name: containerregistry
+  type: string
+  default: cr
+- name: keyvault
+  type: string
+  default: kv
+- name: vmsize
+  type: string
+  default: STANDARD_D2_V2
+- name: maxnodes
+  type: number
+  default: 5
+- name: minnodes
+  type: number
+  default: 2
+
+stages:
+- stage: Prepare
+  displayName: 'setEnv'
+  jobs:
+  - job: MakeEnv
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.6'
+        architecture: 'x64'
+    - task: Bash@3
+      displayName: 'Install Requirements'
+      inputs:
+        targetType: filePath
+        filePath: 'parameters/environment_setup/install_requirements.sh'
+        workingDirectory: 'parameters/environment_setup'
+
+- stage: Build
+  displayName: 'IaC Build'
+  jobs:
+  - job: Build
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Copy ARM templates'
+      inputs:
+        sourceFolder: 'infra-as-code/arm-templates'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      artifact: infratemplates
+
+- stage: DEV
+  displayName: 'DEV Deployment'
+  jobs:
+  - template: infra-as-code/azure-infra.yml
+    parameters:
+      baseName: ${{ parameters.baseName }}
+      environment: ${{ parameters.environment }}
+      location: ${{ parameters.location }}
+      workspacename: ${{ parameters.workspacename }}
+      computename:  ${{ parameters.computename }}
+      applicationinsights:  ${{ parameters.applicationinsights}}
+      keyvault:  ${{ parameters.keyvault }}
+      storageaccount: ${{ parameters.storageaccount }}
+      containerregistry: ${{ parameters.containerregistry }}
+      vmsize: ${{ parameters.vmsize }}
+      maxnodes: ${{ parameters.maxnodes }}
+      minnodes: ${{ parameters.minnodes }}
+      serviceConnection:  ${{ parameters.serviceConnection }}
+

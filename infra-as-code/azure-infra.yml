@@ -1,0 +1,151 @@
+parameters:
+- name: baseName
+  type: string
+- name: environment
+  type: string
+- name: location
+  type: string
+- name: serviceConnection
+  type: string
+- name: workspacename
+  type: string
+- name: computename
+  type: string
+- name: applicationinsights
+  type: string
+- name: storageaccount
+  type: string
+- name: containerregistry
+  type: string
+- name: keyvault
+  type: string
+- name: vmsize
+  type: string
+- name: maxnodes
+  type: number
+- name: minnodes
+  type: number
+
+
+jobs:
+- deployment: DeployMLResources
+  displayName: Deploy ML Resources
+  pool:
+    vmImage: ubuntu-16.04
+  environment: ${{ parameters.environment }}
+  variables:
+  - name: resourceGroupName
+    value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
+  - name: resourceGroupLocation
+    value: ${{ parameters.location }}
+  
+  - name: storageAccountName
+    value: ${{ parameters.baseName }}${{ parameters.storageaccount }}${{ parameters.environment }}
+  - name: containerRegistryName
+    value: ${{ parameters.baseName }}${{ parameters.containerregistry }}${{ parameters.environment }}
+  - name: applicationInsightsName
+    value: ${{ parameters.baseName }}-${{ parameters.applicationinsights }}-${{ parameters.environment }}
+  - name: keyVaultName
+    value: ${{ parameters.baseName }}-${{ parameters.keyvault }}-${{ parameters.environment }}
+  - name: workspaceName
+    value: ${{ parameters.baseName }}-${{ parameters.workspacename }}-${{ parameters.environment }}
+  - name: clusterName
+    value: ${{ parameters.computename }}
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          artifact: infratemplates
+        - script: ls
+          displayName: 'List dirs'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy Storage Account for AML'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/storage-template.json'
+            overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }}'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy Container Registry'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/containerregistry-template.json'
+            overrideParameters: '-crname $(containerRegistryName) -location ${{ parameters.location }}'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy Application Insights'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/appinsights-template.json'
+            overrideParameters: '-appInsightsName $(applicationInsightsName) -location ${{ parameters.location }}'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy Key Vault'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/keyvault-template.json'
+            overrideParameters: '-kvname $(keyVaultName) -location ${{ parameters.location }}'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy ML Workspace'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/mlworkspace-template.json'
+            overrideParameters: '-workspaceName $(workspaceName) -keyVaultName $(keyVaultName) -applicationInsightsName $(applicationInsightsName) -containerRegistryName $(containerRegistryName) -storageAccountName $(storageAccountName)'
+
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy ML Compute'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/mlcompute-template.json'
+            overrideParameters: '-workspaceName $(workspaceName) -clusterName $(clusterName) -vmSize ${{ parameters.vmsize }} -minNodeCount ${{ parameters.minnodes }} -maxNodeCount ${{ parameters.maxnodes }}'
+
+
+
+
+#steps:
+#- task: UsePythonVersion@0
+#  inputs:
+#    versionSpec: '3.6'
+#    architecture: 'x64'   
+#
+#- script: | 
+#   az login
+#   
+#  displayName: 'Login to Azure'
+#
+#- script: |
+#   az account set -s $(subscriptionid)
+#   
+#  displayName: 'Set subscription account'
+#
+#- script: |
+#   az group create -n $(resourcegroup) -l "eastus"
+#   
+#  displayName: 'Creating Resource Group'
+#
+#- script: |
+#   az ml workspace create --workspace-name $(workspacename) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --exist-ok
+#   
+#  displayName: 'Get or Create Workspace'
+#
+#- script: |
+#   az ml computetarget create amlcompute --max-nodes $(maxnodes) --min-nodes $(minnodes) --name $(computename) --vm-size $(vmsize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
+#   
+#  displayName: 'Create AML Compute'
+
