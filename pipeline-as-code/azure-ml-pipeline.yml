@@ -32,7 +32,7 @@ jobs:
   - name: AML_ENVIRONMENT_NAME
     value: ${{ parameters.amlenv }}
   - name: BLOBSTORENAME
-    value: train${{ parameters-baseName }}
+    value: train${{ parameters.baseName }}
   - name: DATASETDS
     value: pavfantasyfootball
   - name: CONTNAME
