@@ -1,0 +1,50 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+#Your build pipeline references a secret variable named ‘sp_username’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references a secret variable named ‘sp_password’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+
+variables:
+- group: AzureKeyVaultSecrets
+
+trigger:
+- master
+- releases/*
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.6'
+    architecture: 'x64'   
+
+- task: Bash@3
+  displayName: 'Install Requirements'
+  inputs:
+    targetType: filePath
+    filePath: 'environment_setup/install_requirements.sh'
+    workingDirectory: 'environment_setup'
+
+- script: | 
+   az login
+   
+  displayName: 'Login to Azure'
+
+- script: |
+   az account set -s $(subscriptionid)
+   
+  displayName: 'Set subscription account'
+
+- script: |
+   az group create -n $(resourcegroup) -l "eastus"
+   
+  displayName: 'Creating Resource Group'
+
+- script: |
+   az ml workspace create --workspace-name $(workspacename) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --exist-ok
+   
+  displayName: 'Get or Create Workspace'
+
+- script: |
+   az ml computetarget create amlcompute --max-nodes "4" --min-nodes "1" --name $(computename) --vm-size $(vmSize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
+   
+  displayName: 'Create AML Compute'
+
