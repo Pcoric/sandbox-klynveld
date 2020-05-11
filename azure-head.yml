@@ -38,6 +38,7 @@ parameters:
   default: mls
 - name: computename
   type: string
+  default: traincompute
 - name: amlenv
   type: string
   default: traincompute
