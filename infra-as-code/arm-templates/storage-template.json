@@ -40,7 +40,7 @@
         },
         "resources": [
             {
-                "name": "[concat('default/', parameters('containerName'))]",
+                "name": "[parameters('containerName')]",
                 "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
                 "apiVersion": "2018-07-01",
                 "dependsOn": [
