@@ -15,6 +15,8 @@ parameters:
   type: string
 - name: storageaccount
   type: string
+- name: containername
+  type: string
 - name: containerregistry
   type: string
 - name: keyvault
@@ -38,7 +40,6 @@ jobs:
     value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
   - name: resourceGroupLocation
     value: ${{ parameters.location }}
-  
   - name: storageAccountName
     value: ${{ parameters.baseName }}${{ parameters.storageaccount }}${{ parameters.environment }}
   - name: containerRegistryName
@@ -51,6 +52,8 @@ jobs:
     value: ${{ parameters.baseName }}-${{ parameters.workspacename }}-${{ parameters.environment }}
   - name: clusterName
     value: ${{ parameters.computename }}
+  - name: dataSetDS
+    value: 
 
   strategy:
     runOnce:
@@ -68,7 +71,7 @@ jobs:
             resourceGroupName: $(resourceGroupName)
             location: $(resourceGroupLocation)
             csmFile: '$(Pipeline.Workspace)/infratemplates/storage-template.json'
-            overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }}'
+            overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }} -containerName ${{ parameters.containername }}' 
 
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy Container Registry'

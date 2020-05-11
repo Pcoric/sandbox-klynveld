@@ -7,6 +7,9 @@
         },
         "location": {
             "type": "string"
+        },        
+        "containerName": {
+            "type": "string"
         },
         "accountType": {
             "type": "string",
@@ -34,6 +37,16 @@
         "properties": {
             "accessTier": "[parameters('accessTier')]",
             "supportsHttpsTrafficOnly": true
-        }
+        },
+        "resources": [
+            {
+                 "name": "[concat(concat(parameters('kind'), '/'), parameters('containerName'))]",
+                    "type": "containers",
+                    "apiVersion": "2018-07-01",
+                    "dependsOn": [
+                        "[parameters('saname')]"
+                    ]
+            }
+        ]
     }]
 }

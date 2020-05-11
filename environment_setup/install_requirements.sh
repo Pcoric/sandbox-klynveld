@@ -30,4 +30,5 @@ az --version
 pip install --upgrade azure-cli==2.0.80
 pip install --upgrade azureml-sdk[cli]
 az extension add -n azure-cli-ml
+pip install --pre -i https://azuremlsdktestpypi.azureedge.net/sdk-release/Candidate/604C89A437BA41BD942B4F46D9A3591D/ --extra-index-url https://pypi.python.org/simple azureml-contrib-pipeline-steps
 pip install -r requirements.txt

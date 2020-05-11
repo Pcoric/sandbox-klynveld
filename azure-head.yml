@@ -38,6 +38,8 @@ parameters:
   default: mls
 - name: computename
   type: string
+- name: amlenv
+  type: string
   default: traincompute
 - name: applicationinsights
   type: string
@@ -45,6 +47,9 @@ parameters:
 - name: storageaccount
   type: string
   default: sa
+- name: containername
+  type: string
+  default: pid
 - name: containerregistry
   type: string
   default: cr
@@ -92,7 +97,7 @@ stages:
       artifact: infratemplates
 
 - stage: DEV
-  displayName: 'DEV Deployment'
+  displayName: 'DEV Deployment Infrastructure'
   jobs:
   - template: infra-as-code/azure-infra.yml
     parameters:
@@ -104,9 +109,23 @@ stages:
       applicationinsights:  ${{ parameters.applicationinsights}}
       keyvault:  ${{ parameters.keyvault }}
       storageaccount: ${{ parameters.storageaccount }}
+      containername: ${{ parameters.containername }}
       containerregistry: ${{ parameters.containerregistry }}
       vmsize: ${{ parameters.vmsize }}
       maxnodes: ${{ parameters.maxnodes }}
       minnodes: ${{ parameters.minnodes }}
       serviceConnection:  ${{ parameters.serviceConnection }}
+
+  - stage: DEV 2
+  displayName: 'DEV Deployment pipeline'
+  jobs:
+  - template: pipeline-as-code/azure-ml-pipeline.yml
+    parameters:
+      baseName: ${{ parameters.baseName }}
+      environment: ${{ parameters.environment }}
+      location: ${{ parameters.location }}
+      workspacename: ${{ parameters.workspacename }}
+      computename:  ${{ parameters.computename }}
+      serviceConnection:  ${{ parameters.serviceConnection }}
+      amlenv: ${{ parameters.amlenv }}
 
