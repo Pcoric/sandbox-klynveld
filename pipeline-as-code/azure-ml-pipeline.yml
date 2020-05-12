@@ -52,17 +52,20 @@ jobs:
               export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
               # Invoke the Python building and publishing a training pipeline
               python -m pipeline-as-code.build_pipeline
-            env:
-              TENANT_ID: $(sptenant)
-              SPN_ID: $(spidentity)
-              SPN_PASSWORD: $(spsecret)
-              AML_WORKSPACE_NAME: $(WORKSPACE_NAME)
-              AML_ENVIRONMENT_NAME: $(AML_ENVIRONMENT_NAME)
-              RESOURCE_GROUP: $(RESOURCEGROUP_NAME)
-              COMPUTE_NAME: $(CLUSTER_NAME)
-              SUBSCRIPTION_ID: $(subscriptionid)
-              BLOBSTORENAME: $(BLOBSTORENAME)
-              DATASETDS: $(DATASETDS)
-              CONTNAME: $(CONTNAME)
-              ACCTKEY: $(saKey)
+          displayName: 'get CWD'
+        - script: 'python -m pipeline-as-code.build_pipeline'
+          displayName: 'Pipeline Environment'
+          env:
+            TENANT_ID: $(sptenant)
+            SPN_ID: $(spidentity)
+            SPN_PASSWORD: $(spsecret)
+            AML_WORKSPACE_NAME: $(WORKSPACE_NAME)
+            AML_ENVIRONMENT_NAME: $(AML_ENVIRONMENT_NAME)
+            RESOURCE_GROUP: $(RESOURCEGROUP_NAME)
+            COMPUTE_NAME: $(CLUSTER_NAME)
+            SUBSCRIPTION_ID: $(subscriptionid)
+            BLOBSTORENAME: $(BLOBSTORENAME)
+            DATASETDS: $(DATASETDS)
+            CONTNAME: $(CONTNAME)
+            ACCTKEY: $(saKey)
 
