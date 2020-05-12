@@ -78,12 +78,7 @@ stages:
       inputs:
         versionSpec: '3.6'
         architecture: 'x64'
-    - task: Bash@3
-      displayName: 'Install Requirements'
-      inputs:
-        targetType: filePath
-        filePath: 'parameters/environment_setup/install_requirements.sh'
-        workingDirectory: 'parameters/environment_setup'
+
 
 - stage: Build
   displayName: 'IaC Build'
@@ -104,6 +99,13 @@ stages:
         targetFolder: '$(Build.ArtifactStagingDirectory)'
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: pipelinetemplates
+    - task: CopyFiles@2
+      displayName: 'Copy ENV folder'
+      inputs:
+        sourceFolder: 'parameters/environment_setup'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      artifact: envsetup
 
 - stage: DEV
   displayName: 'DEV Deployment Infrastructure'
