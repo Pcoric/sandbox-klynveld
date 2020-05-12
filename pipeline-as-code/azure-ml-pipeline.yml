@@ -44,7 +44,7 @@ jobs:
         steps:
         - task: AzureCLI@1
           inputs:
-            azureSubscription: '$(serviceConnection)'
+            azureSubscription: ${{ parameters.serviceConnection }}
             scriptLocation: inlineScript
             workingDirectory: $(Build.SourcesDirectory)
             inlineScript: |
