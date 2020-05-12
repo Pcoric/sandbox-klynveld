@@ -42,7 +42,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - script: 'python pipeline-as-code/build_pipeline.py'
+        - script: 'python build_pipeline.py'
           displayName: 'Pipeline Environment'
           env:
             TENANT_ID: $(sptenant)
