@@ -69,16 +69,6 @@ parameters:
   default: 2
 
 stages:
-- stage: Prepare
-  displayName: 'setEnv'
-  jobs:
-  - job: MakeEnv
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.6'
-        architecture: 'x64'
-
 - stage: Build
   displayName: 'IaC Build'
   jobs:

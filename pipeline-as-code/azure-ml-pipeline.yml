@@ -37,6 +37,10 @@ jobs:
   - name: CONTNAME
     value: bentleyhack
   steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
   - download: current
     artifact: envsetup
   - task: Bash@3
@@ -44,7 +48,7 @@ jobs:
     inputs:
       targetType: filePath
       filePath: '$(Pipeline.Workspace)/envsetup/install_requirements.sh'
-      workingDirectory: '$(Pipeline.Workspace)/envsetup'
+      workingDirectory: '$(Pipeline.Workspace)'
   - download: current
     artifact: pipelinetemplates
   - script: 'python $(Pipeline.Workspace)/pipelinetemplates/build_pipeline.py'
