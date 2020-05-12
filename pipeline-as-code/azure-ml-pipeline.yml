@@ -18,7 +18,6 @@ parameters:
 jobs:
 - job: Declare Variables
   displayName: Declare Vars
-  environment: ${{ parameters.environment }}
   variables:
   - group: AzureKeyVaultSecrets
   - name: RESOURCEGROUP_NAME
@@ -39,30 +38,31 @@ jobs:
     value: bentleyhack
 
   strategy:
-    steps:
-    - download: current
-      artifact: envsetup
-    - task: Bash@3
-      displayName: 'Install Requirements'
-      inputs:
-        targetType: filePath
-        filePath: '$(Pipeline.Workspace)/envsetup/install_requirements.sh'
-        workingDirectory: '$(Pipeline.Workspace)/envsetup'
-    - download: current
-      artifact: pipelinetemplates
-    - script: 'python $(Pipeline.Workspace)/pipelinetemplates/build_pipeline.py'
-      displayName: 'Pipeline Environment'
-      env:
-        TENANT_ID: $(sptenant)
-        SPN_ID: $(spidentity)
-        SPN_PASSWORD: $(spsecret)
-        AML_WORKSPACE_NAME: $(WORKSPACE_NAME)
-        AML_ENVIRONMENT_NAME: $(AML_ENVIRONMENT_NAME)
-        RESOURCE_GROUP: $(RESOURCEGROUP_NAME)
-        COMPUTE_NAME: $(CLUSTER_NAME)
-        SUBSCRIPTION_ID: $(subscriptionid)
-        BLOBSTORENAME: $(BLOBSTORENAME)
-        DATASETDS: $(DATASETDS)
-        CONTNAME: $(CONTNAME)
-        ACCTKEY: $(saKey)
+    deploy:
+      steps:
+      - download: current
+        artifact: envsetup
+      - task: Bash@3
+        displayName: 'Install Requirements'
+        inputs:
+          targetType: filePath
+          filePath: '$(Pipeline.Workspace)/envsetup/install_requirements.sh'
+          workingDirectory: '$(Pipeline.Workspace)/envsetup'
+      - download: current
+        artifact: pipelinetemplates
+      - script: 'python $(Pipeline.Workspace)/pipelinetemplates/build_pipeline.py'
+        displayName: 'Pipeline Environment'
+        env:
+          TENANT_ID: $(sptenant)
+          SPN_ID: $(spidentity)
+          SPN_PASSWORD: $(spsecret)
+          AML_WORKSPACE_NAME: $(WORKSPACE_NAME)
+          AML_ENVIRONMENT_NAME: $(AML_ENVIRONMENT_NAME)
+          RESOURCE_GROUP: $(RESOURCEGROUP_NAME)
+          COMPUTE_NAME: $(CLUSTER_NAME)
+          SUBSCRIPTION_ID: $(subscriptionid)
+          BLOBSTORENAME: $(BLOBSTORENAME)
+          DATASETDS: $(DATASETDS)
+          CONTNAME: $(CONTNAME)
+          ACCTKEY: $(saKey)
 
