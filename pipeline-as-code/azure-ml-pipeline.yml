@@ -44,7 +44,7 @@ jobs:
         steps:
         - task: AzureCLI@1
           inputs:
-            azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
+            azureSubscription: '$(serviceConnection)'
             scriptLocation: inlineScript
             workingDirectory: $(Build.SourcesDirectory)
             inlineScript: |
