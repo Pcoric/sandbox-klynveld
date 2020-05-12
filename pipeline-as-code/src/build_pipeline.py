@@ -140,11 +140,11 @@ def main():
     s200_prs_filename = "sheet_classifer.txt"
     s200_parallel_run_config = ParallelRunConfig(
                     environment=aml_env,
-                    entry_script=currentDir + "/score.py",
+                    entry_script="score.py",
                     output_action='append_row',
                     mini_batch_size="1",
                     error_threshold=1,
-                    source_directory="./",
+                    source_directory="./pipeline-as-code/src/",
                     compute_target=aml_compute, 
                     append_row_file_name= s200_prs_filename,
                     node_count=3)

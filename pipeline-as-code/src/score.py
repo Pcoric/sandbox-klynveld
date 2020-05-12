@@ -35,7 +35,7 @@ def run(mini_batch):
         basename = os.path.basename(file)
         print("File: " + file)
         #data = open(fullfile,"rb").read()
-        data = open(".\\test images\\" + file,"rb").read()
+        data = open(file,"rb").read()
         response = requests.post(endpoint_url, headers=headers, data=data)
         
         root_dict = {}
