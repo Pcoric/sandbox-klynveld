@@ -42,18 +42,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - task: AzureCLI@1
-          inputs:
-            azureSubscription: ${{ parameters.serviceConnection }}
-            scriptLocation: inlineScript
-            workingDirectory: $(Build.SourcesDirectory)
-            inlineScript: |
-              set -e # fail on error
-              export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-              # Invoke the Python building and publishing a training pipeline
-              python -m pipeline-as-code.build_pipeline
-          displayName: 'get CWD'
-        - script: 'python -m pipeline-as-code.build_pipeline'
+        - script: 'python src/build_pipeline.py'
           displayName: 'Pipeline Environment'
           env:
             TENANT_ID: $(sptenant)

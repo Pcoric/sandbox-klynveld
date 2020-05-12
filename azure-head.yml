@@ -21,7 +21,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pavl
+  default: pav
 - name: environment
   type: string
   default: dev
@@ -97,6 +97,13 @@ stages:
         targetFolder: '$(Build.ArtifactStagingDirectory)'
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: infratemplates
+      - task: CopyFiles@2
+      displayName: 'Copy ARM templates'
+      inputs:
+        sourceFolder: 'pipeline-as-code/src'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+    - publish: '$(Build.ArtifactStagingDirectory)'
+      artifact: pipelinetemplates
 
 - stage: DEV
   displayName: 'DEV Deployment Infrastructure'
