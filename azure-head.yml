@@ -117,7 +117,7 @@ stages:
       minnodes: ${{ parameters.minnodes }}
       serviceConnection:  ${{ parameters.serviceConnection }}
 
-- stage: DEV 2
+- stage: DEV2
   displayName: 'DEV Deployment pipeline'
   jobs:
   - template: pipeline-as-code/azure-ml-pipeline.yml
