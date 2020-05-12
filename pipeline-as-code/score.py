@@ -30,7 +30,7 @@ def run(mini_batch):
 
     step_name = "sheet_classifier"
 
-    for file in os.listdir(mini_batch):
+    for file in mini_batch:
         #fullfile = os.getcwd() + "\\test images\\" + file
         basename = os.path.basename(file)
         print("File: " + file)
