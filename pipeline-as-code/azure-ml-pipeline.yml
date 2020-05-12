@@ -51,7 +51,7 @@ jobs:
               set -e # fail on error
               export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
               # Invoke the Python building and publishing a training pipeline
-              pwd
+              ls -a
           displayName: 'get CWD'
         - script: 'python build_pipeline.py'
           displayName: 'Pipeline Environment'

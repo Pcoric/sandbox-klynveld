@@ -179,3 +179,5 @@ def main():
     pd_output_others = PipelineData(output_base_dir + "_outputs", datastore=ds)
     '''
 
+if __name__ == '__main__':
+    main()
