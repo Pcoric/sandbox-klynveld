@@ -20,7 +20,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pc
+  default: pav
 - name: environment
   type: string
   default: dev
