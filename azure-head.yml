@@ -16,6 +16,7 @@ trigger:
     include:
     - infra-as-code/*
     - parameters/*
+    - pipeline-as-code/*
 
 parameters:
 - name: baseName
