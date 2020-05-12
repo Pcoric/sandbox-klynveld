@@ -97,8 +97,8 @@ stages:
         targetFolder: '$(Build.ArtifactStagingDirectory)'
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: infratemplates
-      - task: CopyFiles@2
-      displayName: 'Copy ARM templates'
+    - task: CopyFiles@3
+      displayName: 'Copy src folder'
       inputs:
         sourceFolder: 'pipeline-as-code/src'
         targetFolder: '$(Build.ArtifactStagingDirectory)'
