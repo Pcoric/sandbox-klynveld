@@ -16,7 +16,7 @@ parameters:
   type: string
 
 jobs:
-- job: Declare Variables
+- job: DeclareVariables
   displayName: Declare Vars
   variables:
   - group: AzureKeyVaultSecrets
