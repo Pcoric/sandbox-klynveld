@@ -21,7 +21,7 @@ from azureml.core import Experiment
 
 from util.aml_interface import AMLInterface
 
-def create_aml_environment(aml_interface, aml_env_name):
+def create_aml_environment(aml_workspace, aml_env_name):
     aml_env = Environment(name=aml_env_name)
     conda_dep = CondaDependencies()
     conda_dep.add_pip_package("numpy==1.18.2")
@@ -38,7 +38,7 @@ def create_aml_environment(aml_interface, aml_env_name):
     '''
     whl_filepath = retrieve_whl_filepath()
     whl_url = Environment.add_private_pip_wheel(
-        workspace=aml_interface.workspace,
+        workspace=aml_workspace,
         file_path=whl_filepath,
         exist_ok=True
     )
@@ -84,17 +84,13 @@ def main():
     account_key = os.environ['ACCTKEY']
 
 
-    spn_credentials = {
-        'tenant_id': os.environ['TENANT_ID'],
-        'service_principal_id': os.environ['SPN_ID'],
-        'service_principal_password': os.environ['SPN_PASSWORD'],
-    }
-
     # Get Azure machine learning workspace
     aml_workspace = Workspace.get(name = workspace_name, subscription_id = subscription_id, resource_group = resource_group)
     print("get_workspace:")
     print(aml_workspace)
 
+
+    #aml_interface = AMLInterface(aml_workspace, subscription_id, workspace_name, resource_group)
 
     # Get Azure machine learning cluster
     aml_compute = get_compute(aml_workspace, compute_name)
@@ -103,13 +99,17 @@ def main():
     #    print(aml_compute)
 
 
-    aml_interface = AMLInterface(
-        spn_credentials, subscription_id, workspace_name, resource_group
-    )
-    aml_env, conda_dep = create_aml_environment(aml_interface, aml_environment_name)
-    aml_interface.register_aml_environment(aml_env)
-    aml_interface.register_datastore(blob_datastore_name, container_name, account_name, account_key)
-
+    aml_env, conda_dep = create_aml_environment(aml_workspace, aml_environment_name)
+    #aml_interface.register_aml_environment(aml_env)
+    aml_env.register(workspace=aml_workspace)
+    #aml_interface.register_datastore(blob_datastore_name, container_name, account_name, account_key)
+    Datastore.register_azure_blob_container(
+            workspace=aml_workspace,
+            datastore_name=blob_datastore_name,
+            container_name=container_name,
+            account_name=account_name,
+            account_key=account_key
+        )
     runconfig = RunConfiguration(conda_dependencies=conda_dep)
     runconfig.environment.environment_variables["DATASTORE_NAME"] = blob_datastore_name  # NOQA: E501
     
