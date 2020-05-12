@@ -82,6 +82,7 @@ def main():
     account_name=os.environ['DATASETDS']
     container_name=os.environ['CONTNAME']
     account_key = os.environ['ACCTKEY']
+    currentDir = os.environ['CURRENTDIR']
 
 
     # Get Azure machine learning workspace
@@ -139,7 +140,7 @@ def main():
     s200_prs_filename = "sheet_classifer.txt"
     s200_parallel_run_config = ParallelRunConfig(
                     environment=aml_env,
-                    entry_script="score.py",
+                    entry_script=currentDir + "/score.py",
                     output_action='append_row',
                     mini_batch_size="1",
                     error_threshold=1,
