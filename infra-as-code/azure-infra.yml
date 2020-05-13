@@ -42,6 +42,8 @@ jobs:
     value: ${{ parameters.location }}
   - name: storageAccountName
     value: ${{ parameters.baseName }}${{ parameters.storageaccount }}${{ parameters.environment }}
+  - name: datastoreName
+    value: ${{ parameters.baseName }}${{ parameters.storageaccount }}data${{ parameters.environment }}
   - name: containerRegistryName
     value: ${{ parameters.baseName }}${{ parameters.containerregistry }}${{ parameters.environment }}
   - name: applicationInsightsName
@@ -65,7 +67,7 @@ jobs:
           displayName: 'List dirs'
 
         - task: AzureResourceGroupDeployment@2
-          displayName: 'Deploy Storage Account for AML'
+          displayName: 'Deploy Storage Account for AML workspace'
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
             resourceGroupName: $(resourceGroupName)
@@ -73,6 +75,15 @@ jobs:
             csmFile: '$(Pipeline.Workspace)/infratemplates/storage-template.json'
             overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }} -containerName ${{ parameters.containername }}' 
 
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy Storage Account for AML data'
+          inputs:
+            azureSubscription: ${{ parameters.serviceConnection }}
+            resourceGroupName: $(resourceGroupName)
+            location: $(resourceGroupLocation)
+            csmFile: '$(Pipeline.Workspace)/infratemplates/datastorage-template.json'
+            overrideParameters: '-saname $(datastoreName) -location ${{ parameters.location }} -firstContainerName in${{ parameters.containername }}  -secondContainerName out${{ parameters.containername }}' 
+  
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy Container Registry'
           inputs:

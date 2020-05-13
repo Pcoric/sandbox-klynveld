@@ -8,7 +8,10 @@
         "location": {
             "type": "string"
         },        
-        "containerName": {
+        "firstContainerName": {
+            "type": "string"
+        },
+        "secondContainerName": {
             "type": "string"
         },
         "accountType": {
@@ -37,6 +40,24 @@
         "properties": {
             "accessTier": "[parameters('accessTier')]",
             "supportsHttpsTrafficOnly": true
-        }
+        },
+        "resources": [
+            {
+                "name": "[concat(parameters('saname'), '/default/', parameters('firstContainerName'))]",
+                "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                "apiVersion": "2018-07-01",
+                "dependsOn": [
+                        "[parameters('saname')]"
+                    ]
+            },
+            {
+                "name": "[concat(parameters('saname'), '/default/', parameters('secondContainerName'))]",
+                "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+                "apiVersion": "2018-07-01",
+                "dependsOn": [
+                        "[parameters('saname')]"
+                    ]
+            }
+        ]
     }]
 }
