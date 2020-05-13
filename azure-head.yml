@@ -24,7 +24,7 @@ parameters:
   default: pav
 - name: environment
   type: string
-  default: test
+  default: dev
   values: 
   - test
   - dev
