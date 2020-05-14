@@ -197,8 +197,8 @@ def main():
 
 
     #Create a published pipeline endpoint for accessing the pipeline. 
-    pipeline_endpoint = PipelineEndpoint.publish(workspace=aml_workspace, name="PipelineEndpointTest",
-                                            pipeline=published_pipeline, description="Test description Notebook")
+    #pipeline_endpoint = PipelineEndpoint.publish(workspace=aml_workspace, name="PipelineEndpointTest",
+    #                                        pipeline=published_pipeline, description="Test description Notebook")
     # Create a reusable Azure ML environment
     #environment = get_environment(aml_workspace, e.aml_env_name, create_new=e.rebuild_env)  #
     #run_config = RunConfiguration()

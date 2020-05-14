@@ -24,7 +24,7 @@ parameters:
   default: pavl
 - name: environment
   type: string
-  default: dev
+  default: test
   values: 
   - test
   - dev
