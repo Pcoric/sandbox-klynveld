@@ -13,7 +13,7 @@ from azureml.data.data_reference import DataReference
 from azureml.data.datapath import DataPath
 from azureml.core import Experiment
 from azureml.pipeline.core import PipelineEndpoint
-from azureml.pipeline.core import PipelineEndpoint
+from azureml.pipeline.core import PipelineDraft
 
 #from util.attach_compute import get_compute
 #from util.env_variables import Env
@@ -137,7 +137,7 @@ def main():
         #datastore=ds,
         #data_reference_name="score_data",
         #path_on_datastore="aiml20/testimages/")
-
+    # Specify output data for object
     output_data1 = PipelineData(
         "output_data1",
         datastore=ds,
@@ -174,13 +174,22 @@ def main():
         allow_reuse=True #[optional - default value True]
     )
 
+    # Establish Pipeline Tags
+    ptags = {'dev': 'true'}
+    # Aggregate the steps, in this example there's only one
     simpleModel = [image_classifier]
-    pipeline_draft = Pipeline(workspace=aml_workspace, steps=[simpleModel])
-    pipeline_draft.validate()
-    pipeline_run = Experiment(aml_workspace, 'minihack').submit(pipeline_draft)
+    # Create a Pipeline Object, note this won't save anything. The Pipeline Object must be published or saved as a draft. 
+    pipeline = Pipeline(workspace=aml_workspace, steps=[simpleModel])
+    # Register the Pipeline as a Draft and add tags/properties such as customer, environment etc. The tags are immutable the properties 
+    pipeline_draft = PipelineDraft.create(workspace=aml_workspace, name="minihackDraft", description="showing that pipeline draft capability helps monitor", experiment_name='minihack', pipeline=pipeline, tags=ptags, properties={'customer':'bentley'})
+    pipeline.validate()
+    # Submit a pipeline run through the experiment,a submitted run can be a ScriptRunConfig, AutoMLConfig, Pipeline, Published Pipeline or PipelineEndpoint
+    pipeline_run = Experiment(aml_workspace, 'minihack').submit(pipeline, tags=ptags)
     pipeline_run.wait_for_completion()
+    # Users can submit a pipeline_run through a pipeline draft using the submit_run function
+    # pipeline_run_example = pipeline_draft_submit_run()
 
-    # Publish a successfully created pipeline.
+    # Publish a successfully completed pipeline_run.
     published_pipeline = pipeline_run.publish_pipeline(
      name="minihackpipeline",
      description="Published pipeline for MiniHack purpose",
@@ -188,7 +197,7 @@ def main():
 
 
     #Create a published pipeline endpoint for accessing the pipeline. 
-    pipeline_endpoint = PipelineEndpoint.publish(workspace=ws, name="PipelineEndpointTest",
+    pipeline_endpoint = PipelineEndpoint.publish(workspace=aml_workspace, name="PipelineEndpointTest",
                                             pipeline=published_pipeline, description="Test description Notebook")
     # Create a reusable Azure ML environment
     #environment = get_environment(aml_workspace, e.aml_env_name, create_new=e.rebuild_env)  #
