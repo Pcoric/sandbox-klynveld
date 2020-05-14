@@ -12,6 +12,8 @@ from azureml.contrib.pipeline.steps import ParallelRunStep, ParallelRunConfig
 from azureml.data.data_reference import DataReference
 from azureml.data.datapath import DataPath
 from azureml.core import Experiment
+from azureml.pipeline.core import PipelineEndpoint
+from azureml.pipeline.core import PipelineEndpoint
 
 #from util.attach_compute import get_compute
 #from util.env_variables import Env
@@ -85,6 +87,20 @@ def main():
     currentDir = os.environ['CURRENTDIR']
 
 
+    #Try This
+    '''
+    [7:55 PM] Daniel Fay
+    
+    run = Run.get_context() 
+    ws = run.experiment.workspace
+    [7:55 PM] Daniel Fay
+    
+    run = Run.get_context()
+    [7:55 PM] Daniel Fay
+    
+    ws = run.experiment.workspace
+
+    '''
     # Get Azure machine learning workspace
     aml_workspace = Workspace.get(name = workspace_name, subscription_id = subscription_id, resource_group = resource_group)
     print("get_workspace:")
@@ -163,6 +179,17 @@ def main():
     pipeline_draft.validate()
     pipeline_run = Experiment(aml_workspace, 'minihack').submit(pipeline_draft)
     pipeline_run.wait_for_completion()
+
+    # Publish a successfully created pipeline.
+    published_pipeline = pipeline_run.publish_pipeline(
+     name="minihackpipeline",
+     description="Published pipeline for MiniHack purpose",
+     version="1.0")
+
+
+    #Create a published pipeline endpoint for accessing the pipeline. 
+    pipeline_endpoint = PipelineEndpoint.publish(workspace=ws, name="PipelineEndpointTest",
+                                            pipeline=published_pipeline, description="Test description Notebook")
     # Create a reusable Azure ML environment
     #environment = get_environment(aml_workspace, e.aml_env_name, create_new=e.rebuild_env)  #
     #run_config = RunConfiguration()

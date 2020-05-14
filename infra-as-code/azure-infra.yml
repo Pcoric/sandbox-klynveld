@@ -73,7 +73,7 @@ jobs:
             resourceGroupName: $(resourceGroupName)
             location: $(resourceGroupLocation)
             csmFile: '$(Pipeline.Workspace)/infratemplates/storage-template.json'
-            overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }} -containerName ${{ parameters.containername }}' 
+            overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }}'
 
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy Storage Account for AML data'
@@ -82,7 +82,7 @@ jobs:
             resourceGroupName: $(resourceGroupName)
             location: $(resourceGroupLocation)
             csmFile: '$(Pipeline.Workspace)/infratemplates/datastorage-template.json'
-            overrideParameters: '-saname $(datastoreName) -location ${{ parameters.location }} -firstContainerName in${{ parameters.containername }}  -secondContainerName out${{ parameters.containername }}' 
+            overrideParameters: '-saname $(datastoreName) -location ${{ parameters.location }} -firstContainerName ${{ parameters.containername }}-in  -secondContainerName ${{ parameters.containername }}-out' 
   
         - task: AzureResourceGroupDeployment@2
           displayName: 'Deploy Container Registry'

@@ -21,10 +21,10 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pavl
+  default: pav
 - name: environment
   type: string
-  default: test
+  default: dev
   values: 
   - test
   - dev
@@ -128,4 +128,5 @@ stages:
       computename:  ${{ parameters.computename }}
       serviceConnection:  ${{ parameters.serviceConnection }}
       amlenv: ${{ parameters.amlenv }}
+
 
