@@ -41,17 +41,13 @@ jobs:
     inputs:
       versionSpec: '3.6'
       architecture: 'x64'
-  - download: current
-    artifact: envsetup
   - task: Bash@3
     displayName: 'Install Requirements'
     inputs:
       targetType: filePath
-      filePath: '$(Pipeline.Workspace)/envsetup/install_requirements.sh'
+      filePath: 'environment_setup/install_requirements.sh'
       workingDirectory: '$(Pipeline.Workspace)'
-  - download: current
-    artifact: pipelinetemplates
-  - script: 'python $(Pipeline.Workspace)/pipelinetemplates/build_pipeline.py'
+  - script: 'python pipeline-as-code/src/build_pipeline.py'
     displayName: 'Pipeline Environment'
     env:
       TENANT_ID: $(sptenant)

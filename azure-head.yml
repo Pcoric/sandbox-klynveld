@@ -31,6 +31,12 @@ parameters:
 - name: location
   type: string
   default: eastus
+- name: trainingloc
+  type: string
+  default: mlcompute
+  values:
+      - mlcompute
+      - local
 - name: serviceConnection
   type: string
   default: pavle-svc
@@ -49,6 +55,9 @@ parameters:
 - name: storageaccount
   type: string
   default: sa
+- name: datastore
+  type: string
+  default: ds
 - name: containername
   type: string
   default: pid
@@ -69,35 +78,8 @@ parameters:
   default: 2
 
 stages:
-- stage: Build
-  displayName: 'IaC Build'
-  jobs:
-  - job: Build
-    steps:
-    - task: CopyFiles@2
-      displayName: 'Copy ARM templates'
-      inputs:
-        sourceFolder: 'infra-as-code/arm-templates'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
-    - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: infratemplates
-    - task: CopyFiles@2
-      displayName: 'Copy src folder'
-      inputs:
-        sourceFolder: 'pipeline-as-code/src'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
-    - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: pipelinetemplates
-    - task: CopyFiles@2
-      displayName: 'Copy ENV folder'
-      inputs:
-        sourceFolder: 'parameters/environment_setup'
-        targetFolder: '$(Build.ArtifactStagingDirectory)'
-    - publish: '$(Build.ArtifactStagingDirectory)'
-      artifact: envsetup
-
-- stage: DEV
-  displayName: 'DEV Deployment Infrastructure'
+- stage: BuildInfra
+  displayName: 'Build Azure Infrastructure'
   jobs:
   - template: infra-as-code/azure-infra.yml
     parameters:
@@ -116,8 +98,8 @@ stages:
       minnodes: ${{ parameters.minnodes }}
       serviceConnection:  ${{ parameters.serviceConnection }}
 
-- stage: DEV2
-  displayName: 'DEV Deployment pipeline'
+- stage: BuildPipes
+  displayName: 'Build Pipeline Components'
   jobs:
   - template: pipeline-as-code/azure-ml-pipeline.yml
     parameters:
@@ -128,5 +110,6 @@ stages:
       computename:  ${{ parameters.computename }}
       serviceConnection:  ${{ parameters.serviceConnection }}
       amlenv: ${{ parameters.amlenv }}
+      datastore: ${{ parameters.datastore }}
 
 
