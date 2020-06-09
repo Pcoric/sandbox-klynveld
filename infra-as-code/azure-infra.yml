@@ -51,7 +51,7 @@ jobs:
   - name: clusterName
     value: ${{ parameters.computename }}
   steps:
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build Storage Account for AML workspace'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -59,7 +59,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/storage-template.json'
       overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build Storage Account for AML data'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -67,7 +67,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/datastorage-template.json'
       overrideParameters: '-saname $(datastoreName) -location ${{ parameters.location }} -firstContainerName ${{ parameters.containername }}-in  -secondContainerName ${{ parameters.containername }}-out' 
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build Container Registry'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -75,7 +75,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/containerregistry-template.json'
       overrideParameters: '-crname $(containerRegistryName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build Application Insights'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -83,7 +83,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/appinsights-template.json'
       overrideParameters: '-appInsightsName $(applicationInsightsName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build Key Vault'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -91,7 +91,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/keyvault-template.json'
       overrideParameters: '-kvname $(keyVaultName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build ML Workspace'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
@@ -99,7 +99,7 @@ jobs:
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/mlworkspace-template.json'
       overrideParameters: '-workspaceName $(workspaceName) -keyVaultName $(keyVaultName) -applicationInsightsName $(applicationInsightsName) -containerRegistryName $(containerRegistryName) -storageAccountName $(storageAccountName)'
-  - task: AzureResourceGroupBuild@2
+  - task: AzureResourceGroupDeployment@2
     displayName: 'Build ML Compute'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
