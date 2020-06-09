@@ -31,9 +31,6 @@ parameters:
 jobs:
 - job: BuildMLResources
   displayName: Build ML Resources
-  pool:
-    vmImage: ubuntu-16.04
-  environment: ${{ parameters.environment }}
   variables:
   - name: resourceGroupName
     value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
