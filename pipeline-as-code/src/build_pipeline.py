@@ -8,7 +8,7 @@ from azureml.core.runconfig import RunConfiguration
 from azureml.core.compute import AmlCompute
 from azureml.core.compute import ComputeTarget
 from azureml.exceptions import ComputeTargetException
-from azureml.contrib.pipeline.steps import ParallelRunStep, ParallelRunConfig
+from azureml.pipeline.steps import ParallelRunStep, ParallelRunConfig
 from azureml.data.data_reference import DataReference
 from azureml.data.datapath import DataPath
 from azureml.core import Experiment
