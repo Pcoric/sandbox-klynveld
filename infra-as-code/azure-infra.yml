@@ -29,7 +29,7 @@ parameters:
   type: number
 
 jobs:
-- deployment: BuildMLResources
+- job: BuildMLResources
   displayName: Build ML Resources
   pool:
     vmImage: ubuntu-16.04
