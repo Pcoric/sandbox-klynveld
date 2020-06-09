@@ -21,7 +21,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pavl
+  default: pav
 - name: environment
   type: string
   default: test
@@ -33,7 +33,7 @@ parameters:
   default: eastus
 - name: serviceConnection
   type: string
-  default: pav-svc
+  default: pavle-svc
 - name: workspacename
   type: string
   default: mls

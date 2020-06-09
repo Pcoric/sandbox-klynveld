@@ -84,28 +84,13 @@ def main():
     account_name=os.environ['DATASETDS']
     container_name=os.environ['CONTNAME']
     account_key = os.environ['ACCTKEY']
-    currentDir = os.environ['CURRENTDIR']
 
 
-    #Try This
-    '''
-    [7:55 PM] Daniel Fay
-    
-    run = Run.get_context() 
-    ws = run.experiment.workspace
-    [7:55 PM] Daniel Fay
-    
-    run = Run.get_context()
-    [7:55 PM] Daniel Fay
-    
-    ws = run.experiment.workspace
-
-    '''
-    # Get Azure machine learning workspace
+    # Get Azure machine learning workspace, interactive Auth
+        #TO-DO: Add service principal to az cli
     aml_workspace = Workspace.get(name = workspace_name, subscription_id = subscription_id, resource_group = resource_group)
     print("get_workspace:")
     print(aml_workspace)
-
 
     #aml_interface = AMLInterface(aml_workspace, subscription_id, workspace_name, resource_group)
 
@@ -115,11 +100,14 @@ def main():
     #    print("aml_compute:")
     #    print(aml_compute)
 
-
+    # Create aml env
     aml_env, conda_dep = create_aml_environment(aml_workspace, aml_environment_name)
-    #aml_interface.register_aml_environment(aml_env)
+
+    # Register AML env
     aml_env.register(workspace=aml_workspace)
-    #aml_interface.register_datastore(blob_datastore_name, container_name, account_name, account_key)
+    
+    # Register Datastore
+        # TO-DO: Build data pipeline to populate data
     Datastore.register_azure_blob_container(
             workspace=aml_workspace,
             datastore_name=blob_datastore_name,
@@ -127,16 +115,14 @@ def main():
             account_name=account_name,
             account_key=account_key
         )
+    # Create runconfig from conda dependencies
     runconfig = RunConfiguration(conda_dependencies=conda_dep)
     runconfig.environment.environment_variables["DATASTORE_NAME"] = blob_datastore_name  # NOQA: E501
     
     # Get datastore as object
     ds = Datastore.get(aml_workspace, blob_datastore_name)
 
-    #blob_input_data = DataReference(
-        #datastore=ds,
-        #data_reference_name="score_data",
-        #path_on_datastore="aiml20/testimages/")
+
     # Specify output data for object
     output_data1 = PipelineData(
         "output_data1",
@@ -146,14 +132,18 @@ def main():
     named_ds = "sampleds"
     # copied from: https://docs.microsoft.com/en-us/python/api/azureml-core/azureml.data.dataset_factory.filedatasetfactory?view=azure-ml-py#from-files-path--validate-true-
 
-
+    # Create data store path for file dataset creation
     datastore_path = DataPath(ds, 'aiml20/testimages/*.jpg')
+    # Create file dataset
     file_dataset = Dataset.File.from_files(path=datastore_path)
+    # Register file dataset with workspace
     registered_flds = file_dataset.register(aml_workspace, named_ds, create_new_version=True)
+    # Create named input object to pass run
     named_flds = registered_flds.as_named_input(named_ds)
 
-    # TO DO: Change entry_script
+    # Create output file name
     s200_prs_filename = "sheet_classifer.txt"
+    # Parallel run config including aml_env, score.py file and compute target
     s200_parallel_run_config = ParallelRunConfig(
                     environment=aml_env,
                     entry_script="score.py",
@@ -165,6 +155,7 @@ def main():
                     append_row_file_name= s200_prs_filename,
                     node_count=3)
     
+    # Create Parallel Run Step Object
     image_classifier = ParallelRunStep(
         name="parallelrunstep",
         arguments=[],
@@ -197,8 +188,8 @@ def main():
 
 
     #Create a published pipeline endpoint for accessing the pipeline. 
-    #pipeline_endpoint = PipelineEndpoint.publish(workspace=aml_workspace, name="PipelineEndpointTest",
-    #                                        pipeline=published_pipeline, description="Test description Notebook")
+    pipeline_endpoint = PipelineEndpoint.publish(workspace=aml_workspace, name="PipelineEndpointTest",
+                                            pipeline=published_pipeline, description="Test description Notebook")
     # Create a reusable Azure ML environment
     #environment = get_environment(aml_workspace, e.aml_env_name, create_new=e.rebuild_env)  #
     #run_config = RunConfiguration()
