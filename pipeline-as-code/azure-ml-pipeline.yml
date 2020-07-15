@@ -64,5 +64,4 @@ jobs:
       DATASETDS: $(DATASETDS)
       CONTNAME: $(CONTNAME)
       ACCTKEY: $(saKey)
-      CURRENTDIR: $(Pipeline.Workspace)/pipelinetemplates
 

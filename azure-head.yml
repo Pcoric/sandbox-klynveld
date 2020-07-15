@@ -21,7 +21,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pav
+  default: omg
 - name: environment
   type: string
   default: dev
@@ -31,12 +31,6 @@ parameters:
 - name: location
   type: string
   default: eastus
-- name: trainingloc
-  type: string
-  default: mlcompute
-  values:
-      - mlcompute
-      - local
 - name: serviceConnection
   type: string
   default: pavle-svc
@@ -111,5 +105,6 @@ stages:
       serviceConnection:  ${{ parameters.serviceConnection }}
       amlenv: ${{ parameters.amlenv }}
       datastore: ${{ parameters.datastore }}
+
 
 
