@@ -21,7 +21,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pid
+  default: pavl
 - name: environment
   type: string
   default: dev
