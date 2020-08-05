@@ -34,6 +34,7 @@ jobs:
 - job: BuildMLResources
   displayName: Build ML Resources
   variables:
+  - group: AzureKeyVaultSecrets
   - name: resourceGroupName
     value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
   - name: resourceGroupLocation
@@ -92,7 +93,7 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/keyvault-template.json'
-      overrideParameters: '-kvname $(keyVaultName) -saname $(storageAccountName) -secretname ${{ parameters.secretname}} -location ${{ parameters.location }}'
+      overrideParameters: '-kvname $(keyVaultName) -saname $(storageAccountName) -tenantID $(tenantid) -objectID $(objectid) -secretname ${{ parameters.secretname}} -location ${{ parameters.location }}'
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build ML Workspace'
     inputs:

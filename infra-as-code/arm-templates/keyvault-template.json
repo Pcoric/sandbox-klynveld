@@ -8,6 +8,12 @@
         "saname": {
             "type": "string"
         },
+        "tenantID": {
+            "type": "string"
+        },
+        "objectID": {
+            "type": "string"
+        },
         "secretname": {
             "type": "string"
         },
@@ -44,7 +50,28 @@
             "tenantId": "[subscription().tenantId]",
             "createMode": "[parameters('createMode')]",
             "enabledForTemplateDeployment": true,
-            "accessPolicies": []
+            "accessPolicies": [
+                {
+                    "tenantId": "[parameters('tenantID')]",
+                    "objectId": "[parameters('objectID')]",
+                    "permissions": {
+                        "keys": [
+                            "get",
+                            "list",
+                            "update",
+                            "create",
+                            "import",
+                            "delete"
+                        ],
+                        "secrets": [
+                            "list",
+                            "get",
+                            "set",
+                            "delete"
+                        ]
+                    }
+                }
+            ]
         }
     },
     {
