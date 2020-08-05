@@ -24,8 +24,7 @@
                 "signedServices": "b",
                 "signedPermission": "rw",
                 "signedExpiry": "2020-10-10T00:00:01Z",
-                "signedResourceTypes": "o",
-                "keyToSign": "bentleyhack"
+                "signedResourceTypes": "o"
             }
         }
     },
