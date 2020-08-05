@@ -134,6 +134,7 @@ def main():
 
     # Create data store path for file dataset creation
     datastore_path = DataPath(ds, 'aiml20/testimages/*.jpg')
+    datastore_path_alt = DataPath(ds, 'aiml20/*/*.jpg')
     # Create file dataset
     file_dataset = Dataset.File.from_files(path=datastore_path)
     # Register file dataset with workspace

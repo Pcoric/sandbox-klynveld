@@ -49,6 +49,9 @@ parameters:
 - name: storageaccount
   type: string
   default: sa
+- name: secretname
+  type: string
+  default: bentleysecret
 - name: datastore
   type: string
   default: ds
@@ -85,6 +88,7 @@ stages:
       applicationinsights:  ${{ parameters.applicationinsights}}
       keyvault:  ${{ parameters.keyvault }}
       storageaccount: ${{ parameters.storageaccount }}
+      secretname: ${{ parameters.secretname }}
       containername: ${{ parameters.containername }}
       containerregistry: ${{ parameters.containerregistry }}
       vmsize: ${{ parameters.vmsize }}

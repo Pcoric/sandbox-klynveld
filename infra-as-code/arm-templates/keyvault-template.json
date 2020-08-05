@@ -5,12 +5,28 @@
         "kvname": {
             "type": "string"
         },
+        "saname": {
+            "type": "string"
+        },
+        "secretname": {
+            "type": "string"
+        },
         "location": {
             "type": "string"
         },
         "createMode": {
             "type": "string",
             "defaultValue": "default"
+        },
+        "accountSasProperties": {
+            "type": "object",
+            "defaultValue": {
+                "signedServices": "b",
+                "signedPermission": "rw",
+                "signedExpiry": "2020-10-10T00:00:01Z",
+                "signedResourceTypes": "o",
+                "keyToSign": "bentleyhack"
+            }
         }
     },
     "variables": {},
@@ -30,6 +46,17 @@
             "createMode": "[parameters('createMode')]",
             "enabledForTemplateDeployment": true,
             "accessPolicies": []
+        }
+    },
+    {
+        "apiVersion": "2018-02-14",
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "dependsOn": [
+            "[concat('Microsoft.KeyVault/vaults/', parameters('kvname'))]"
+        ],
+        "name": "[concat(parameters('kvname'), '/', parameters('secretname'))]",
+        "properties": {
+            "value": "[listAccountSas(parameters('saname'), '2018-07-01', parameters('accountSasProperties')).accountSasToken]"
         }
     }]
 }
