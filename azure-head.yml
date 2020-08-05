@@ -14,6 +14,7 @@ trigger:
 
   paths:
     include:
+    - /*
     - infra-as-code/*
     - parameters/*
     - pipeline-as-code/*
