@@ -22,7 +22,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: pavl
+  default: povl
 - name: environment
   type: string
   default: dev
