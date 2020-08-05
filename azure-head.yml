@@ -21,7 +21,7 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: omg
+  default: pid
 - name: environment
   type: string
   default: dev

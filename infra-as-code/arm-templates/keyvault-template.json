@@ -56,7 +56,7 @@
         ],
         "name": "[concat(parameters('kvname'), '/', parameters('secretname'))]",
         "properties": {
-            "value": "[listAccountSas(parameters('saname'), '2018-07-01', parameters('accountSasProperties')).accountSasToken]"
+            "value": "[listAccountSas(resourceId('Microsoft.Storage/storageAccounts', parameters('saname')), '2018-07-01', parameters('accountSasProperties')).accountSasToken]"
         }
     }]
 }
