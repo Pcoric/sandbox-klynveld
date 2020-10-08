@@ -7,29 +7,38 @@ parameters:
   type: string
 - name: serviceConnection
   type: string
-- name: workspacename
-  type: string
-- name: computename
-  type: string
-- name: applicationinsights
-  type: string
 - name: storageaccount
   type: string
-- name: secretname
+- name: hdiBaseName
   type: string
-- name: containername
+- name: hdiHadoopLogin
   type: string
-- name: containerregistry
+- name: hdiHadoopPassword
+  type: securestring
+- name: hdiVersion
   type: string
-- name: keyvault
+- name: clusterWorkerCountMin
+  type: int
+- name: clusterWorkerCountMax
+  type: int
+- name: clusterWorkerSize
   type: string
-- name: vmsize
+- name: clusterKind
   type: string
-- name: maxnodes
-  type: number
-- name: minnodes
-  type: number
-
+- name: sshUserName
+  type: string
+- name: vnet
+  type: string
+- name: addressSpaces
+  type: string
+- name: subnet0
+  type: string
+- name: subnet0addr
+  type: string
+- name: subnet1
+  type: string
+- name: subnet1addr
+  type: string
 jobs:
 - job: BuildMLResources
   displayName: Build ML Resources
@@ -39,109 +48,41 @@ jobs:
     value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
   - name: resourceGroupLocation
     value: ${{ parameters.location }}
-  - name: storageAccountName
-    value: ${{ parameters.baseName }}${{ parameters.storageaccount }}${{ parameters.environment }}
-  - name: datastoreName
-    value: ${{ parameters.baseName }}${{ parameters.storageaccount }}data${{ parameters.environment }}
-  - name: containerRegistryName
-    value: ${{ parameters.baseName }}${{ parameters.containerregistry }}${{ parameters.environment }}
-  - name: applicationInsightsName
-    value: ${{ parameters.baseName }}-${{ parameters.applicationinsights }}-${{ parameters.environment }}
-  - name: keyVaultName
-    value: ${{ parameters.baseName }}-${{ parameters.keyvault }}-${{ parameters.environment }}
-  - name: workspaceName
-    value: ${{ parameters.baseName }}-${{ parameters.workspacename }}-${{ parameters.environment }}
   - name: clusterName
     value: ${{ parameters.computename }}
-  steps:
+  - name: hdiHadoopName
+    value: ${{ parameters.hdiBaseName}}${{parameters.baseName}}hdp
+  - name: storageAccountLong
+    value: ${{ parameters.storageaccount}}.blob.core.windows.net
+  - name: saContainer
+    value: ${{ parameters.clusterName }}-${{ parameters.containername }}
+  - name: listKeys
+    value: "[listKeys('/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(storageaccount)', '2015-05-01-preview').key1]"
+  - name: vnetid
+    value: "/subscriptions/$(subscriptionid)/resourceGroups/S(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}"
+    steps:
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Storage Account for AML workspace'
+    displayName: 'Build Storage Account for HDI data'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/storage-template.json'
-      overrideParameters: '-saname $(storageAccountName) -location ${{ parameters.location }}'
+      overrideParameters: '-saname ${{ parameters.storageaccount }} -location ${{ parameters.location }}' 
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Storage Account for AML data'
+    displayName: 'Build Virtual Network for HDI & Linux VMs'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/datastorage-template.json'
-      overrideParameters: '-saname $(datastoreName) -location ${{ parameters.location }} -firstContainerName ${{ parameters.containername }}-in  -secondContainerName ${{ parameters.containername }}-out' 
+      csmFile: 'infra-as-code/arm-templates/vnet-template.json'
+      overrideParameters: '-virtualNetworkName ${{ parameters.vnet}} -addressSpaces ${{ parameters.addressSpaces }} -location ${{ parameters.location }} -subnet0_name ${{ parameters.subnet0 }} -subnet0_addressRange ${{ parameters.subnet0addr }} -subnet1_name ${{ parameters.subnet1 }} -subnet1)addressRange ${{ parameters.subnet1addr }}'
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Container Registry'
+    displayName: 'Build HDInsight Hadoop Cluster'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/containerregistry-template.json'
-      overrideParameters: '-crname $(containerRegistryName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Application Insights'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/appinsights-template.json'
-      overrideParameters: '-appInsightsName $(applicationInsightsName) -location ${{ parameters.location }}'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Key Vault'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/keyvault-template.json'
-      overrideParameters: '-kvname $(keyVaultName) -saname $(storageAccountName) -tenantID $(tenantid) -objectID $(objectid) -secretname ${{ parameters.secretname}} -location ${{ parameters.location }}'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build ML Workspace'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/mlworkspace-template.json'
-      overrideParameters: '-workspaceName $(workspaceName) -keyVaultName $(keyVaultName) -applicationInsightsName $(applicationInsightsName) -containerRegistryName $(containerRegistryName) -storageAccountName $(storageAccountName)'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build ML Compute'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/mlcompute-template.json'
-      overrideParameters: '-workspaceName $(workspaceName) -clusterName $(clusterName) -vmSize ${{ parameters.vmsize }} -minNodeCount ${{ parameters.minnodes }} -maxNodeCount ${{ parameters.maxnodes }}'
-
-
-
-
-#steps:
-#- task: UsePythonVersion@0
-#  inputs:
-#    versionSpec: '3.6'
-#    architecture: 'x64'   
-#
-#- script: | 
-#   az login
-#   
-#  displayName: 'Login to Azure'
-#
-#- script: |
-#   az account set -s $(subscriptionid)
-#   
-#  displayName: 'Set subscription account'
-#
-#- script: |
-#   az group create -n $(resourcegroup) -l "eastus"
-#   
-#  displayName: 'Creating Resource Group'
-#
-#- script: |
-#   az ml workspace create --workspace-name $(workspacename) --location "eastus" --resource-group $(resourcegroup) --sku "enterprise" --exist-ok
-#   
-#  displayName: 'Get or Create Workspace'
-#
-#- script: |
-#   az ml computetarget create amlcompute --max-nodes $(maxnodes) --min-nodes $(minnodes) --name $(computename) --vm-size $(vmsize) --resource-group $(resourcegroup) --workspace-name $(workspacename)
-#   
-#  displayName: 'Create AML Compute'
+      csmFile: 'infra-as-code/arm-templates/hdinsighthadoop-template.json'
+      overrideParameters: '-clusterName $(hdiHadoopName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(storageAccountLong) -containerName $(saContainer) -listKeys $(listKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName ${{ parameters.subnet0 }}'
 

@@ -4,7 +4,7 @@ pool:
 #Your build pipeline references a secret variable named ‘sp_password’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
 
 # Azure Pipeline Definition for Infrastructure Deployment
-name: Deploy AML Infrastructure
+name: Deploy Sandbox Infrastructure
 
 # Trigger on changes in the infrastructure folder and on the master branch                      
 trigger:
@@ -16,13 +16,56 @@ trigger:
     include:
     - /*
     - infra-as-code/*
-    - parameters/*
-    - pipeline-as-code/*
 
 parameters:
 - name: baseName
   type: string
   default: povl
+- name: vnet
+  type: string
+  default: hdivnet
+- name: addressSpaces
+  type: string
+  default: 10.3.0.0/16
+- name: subnet0
+  type: string
+  default: default
+- name: subnet0addr
+  type: string
+  default: 10.3.0.0/24
+- name: subnet1
+  type: string
+  default: second
+- name: subnet1addr
+  type: string
+  default: 10.3.1.0/24
+- name: hdiBaseName
+  type: string
+  default: libor
+- name: hdiHadoopLogin
+  type: string
+  default: kadim
+- name: hdiHadoopPassword
+  type: securestring
+  default: Password1.!!
+- name: hdiVersion
+  type: string
+  default: 3.6
+- name: clusterWorkerCountMin
+  type: int
+  default: 5
+- name: clusterWorkerCountMax
+  type: int
+  default: 10
+- name: clusterWorkerSize
+  type: string
+  default: "Standard_F4"
+- name: clusterKind
+  type: string
+  default: "HADOOP"
+- name: sshUserName
+  type: string
+  default: "sshuser"
 - name: environment
   type: string
   default: dev
@@ -38,15 +81,6 @@ parameters:
 - name: workspacename
   type: string
   default: mls
-- name: computename
-  type: string
-  default: traincompute
-- name: amlenv
-  type: string
-  default: traincompute
-- name: applicationinsights
-  type: string
-  default: ain
 - name: storageaccount
   type: string
   default: sa
@@ -58,22 +92,8 @@ parameters:
   default: ds
 - name: containername
   type: string
-  default: pid
-- name: containerregistry
-  type: string
-  default: cr
-- name: keyvault
-  type: string
-  default: kv
-- name: vmsize
-  type: string
-  default: STANDARD_D2_V2
-- name: maxnodes
-  type: number
-  default: 5
-- name: minnodes
-  type: number
-  default: 2
+  default: raw
+
 
 stages:
 - stage: BuildInfra
@@ -84,32 +104,9 @@ stages:
       baseName: ${{ parameters.baseName }}
       environment: ${{ parameters.environment }}
       location: ${{ parameters.location }}
-      workspacename: ${{ parameters.workspacename }}
-      computename:  ${{ parameters.computename }}
-      applicationinsights:  ${{ parameters.applicationinsights}}
-      keyvault:  ${{ parameters.keyvault }}
       storageaccount: ${{ parameters.storageaccount }}
-      secretname: ${{ parameters.secretname }}
       containername: ${{ parameters.containername }}
-      containerregistry: ${{ parameters.containerregistry }}
-      vmsize: ${{ parameters.vmsize }}
-      maxnodes: ${{ parameters.maxnodes }}
-      minnodes: ${{ parameters.minnodes }}
       serviceConnection:  ${{ parameters.serviceConnection }}
-
-- stage: BuildPipes
-  displayName: 'Build Pipeline Components'
-  jobs:
-  - template: pipeline-as-code/azure-ml-pipeline.yml
-    parameters:
-      baseName: ${{ parameters.baseName }}
-      environment: ${{ parameters.environment }}
-      location: ${{ parameters.location }}
-      workspacename: ${{ parameters.workspacename }}
-      computename:  ${{ parameters.computename }}
-      serviceConnection:  ${{ parameters.serviceConnection }}
-      amlenv: ${{ parameters.amlenv }}
-      datastore: ${{ parameters.datastore }}
 
 
 
