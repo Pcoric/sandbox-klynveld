@@ -10,7 +10,7 @@ name: Deploy Sandbox Infrastructure
 trigger:
   branches:
     include:
-    - master
+    - main
 
   paths:
     include:
