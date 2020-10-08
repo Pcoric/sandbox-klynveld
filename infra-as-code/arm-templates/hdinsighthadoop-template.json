@@ -35,14 +35,14 @@
                 "description": "HDInsight cluster version."
             }
         },
-        "clusterWorkerNodeCountMin": {
+        "clusterWorkerCountMin": {
             "type": "int",
             "defaultValue": 5,
             "metadata": {
                 "description": "The minimum number of nodes in the HDInsight cluster."
             }
         },
-        "clusterWorkerNodeCountMax": {
+        "clusterWorkerCountMax": {
             "type": "int",
             "defaultValue": 10,
             "metadata": {
@@ -103,6 +103,12 @@
             "metadata": {
                 "description": "The string to list keys"
             }
+        },
+        "storageAccountLong": {
+            "type": "string",
+            "metadata": {
+                "description": "The url used to access the Storage Account"
+            }
         }
     },
     "resources": [
@@ -133,7 +139,7 @@
                 "storageProfile": {
                     "storageaccounts": [
                         {
-                            "name": "[parameters('storageaccountlong')]",
+                            "name": "[parameters('storageAccountLong')]",
                             "isDefault": true,
                             "container": "[parameters('containerName')]",
                             "key": "[parameters('listKeys')]"
@@ -167,8 +173,8 @@
                         {
                             "autoscale": {
                                 "capacity": {
-                                    "minInstanceCount": "[parameters('clusterWorkerNodeCountMin')]",
-                                    "maxInstanceCount": "[parameters('clusterWorkerNodeCountMax')]"
+                                    "minInstanceCount": "[parameters('clusterWorkerCountMin')]",
+                                    "maxInstanceCount": "[parameters('clusterWorkerCountMax')]"
                                 },
                                 "recurrence": null
                             },
