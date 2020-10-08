@@ -14,13 +14,13 @@ parameters:
 - name: hdiHadoopLogin
   type: string
 - name: hdiHadoopPassword
-  type: securestring
+  type: string
 - name: hdiVersion
   type: string
 - name: clusterWorkerCountMin
-  type: int
+  type: number
 - name: clusterWorkerCountMax
-  type: int
+  type: number
 - name: clusterWorkerSize
   type: string
 - name: clusterKind
@@ -48,8 +48,6 @@ jobs:
     value: rg-${{ parameters.baseName }}-${{ parameters.environment }}
   - name: resourceGroupLocation
     value: ${{ parameters.location }}
-  - name: clusterName
-    value: ${{ parameters.computename }}
   - name: hdiHadoopName
     value: ${{ parameters.hdiBaseName}}${{parameters.baseName}}hdp
   - name: storageAccountLong

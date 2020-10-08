@@ -46,16 +46,16 @@ parameters:
   type: string
   default: kadim
 - name: hdiHadoopPassword
-  type: securestring
+  type: string
   default: Password1.!!
 - name: hdiVersion
   type: string
   default: 3.6
 - name: clusterWorkerCountMin
-  type: int
+  type: number
   default: 5
 - name: clusterWorkerCountMax
-  type: int
+  type: number
   default: 10
 - name: clusterWorkerSize
   type: string
@@ -104,9 +104,25 @@ stages:
       baseName: ${{ parameters.baseName }}
       environment: ${{ parameters.environment }}
       location: ${{ parameters.location }}
-      storageaccount: ${{ parameters.storageaccount }}
-      containername: ${{ parameters.containername }}
       serviceConnection:  ${{ parameters.serviceConnection }}
+      storageaccount: ${{ parameters.storageaccount }}
+      hdiBaseName: ${{ parameters.hdiBaseName }}
+      hdiHadoopLogin: ${{ parameters.hdiHadoopLogin }}
+      hdiHadoopPassword: ${{ parameters.hdiHadoopPassword }}
+      hdiVersion: ${{ parameters.hdiVersion }}
+      clusterWorkerCountMin: ${{ parameters.clusterWorkerCountMin }}
+      clusterWorkerCountMax: ${{ parameters.clusterWorkerCountMax }}
+      clusterWorkerSize: ${{ parameters.clusterWorkerSize }}
+      clusterKind: ${{ parameters.clusterKind }}
+      sshUserName: ${{ parameters.sshUserName }}
+      vnet: ${{ parameters.vnet }}
+      addressSpaces: ${{ parameters.addressSpaces }}
+      subnet0: ${{ parameters.subnet0 }}
+      subnet0addr: ${{ parameters.subnet0addr }}
+      subnet1: ${{ parameters.subnet1 }}
+      subnet1addr: ${{ parameters.subnet1addr }}
+      containername: ${{ parameters.containername }}
+
 
 
 
