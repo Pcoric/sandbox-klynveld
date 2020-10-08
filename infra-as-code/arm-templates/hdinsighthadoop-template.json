@@ -13,7 +13,7 @@
             "metadata": {
                 "description": "Used to pass the subnet vnet profile"
             }
-        }
+        },
         "clusterLoginUserName": {
             "type": "string",
             "defaultValue": "admin",
