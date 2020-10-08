@@ -92,18 +92,6 @@
             "type": "string",
             "defaultValue": "1.2"
         },
-        "storageAccount":{
-            "type": "string",
-            "metadata": {
-                "description": "The name for the storage account to be used"
-            }
-        },
-        "storageAccountLong":{
-            "type": "string",
-            "metadata": {
-                "description": "The full name for the storage account to be used"
-            }
-        },
         "containerName": {
             "type": "string",
             "metadata": {
