@@ -24,7 +24,8 @@
             "type": "string"
         },
         "ddosProtectionPlanEnabled": {
-            "type": "bool"
+            "type": "bool",
+            "defaultValue": false
         }
     },
     "variables": {},
