@@ -171,7 +171,7 @@
                             },
                             "virtualNetworkProfile": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-                                "subnet": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('subnetName'))]"
                             },
                             "scriptActions": [],
                             "dataDisksGroups": null
