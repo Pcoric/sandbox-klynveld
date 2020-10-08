@@ -44,7 +44,7 @@ parameters:
 
 jobs:
 - job: BuildMLResources
-  displayName: Build ML Resources
+  displayName: Build SFDC resources
   variables:
   - group: AzureKeyVaultSecrets
   - name: resourceGroupName
