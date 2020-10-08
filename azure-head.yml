@@ -23,7 +23,7 @@ parameters:
   default: dignex
 - name: environment
   type: string
-  default: dev
+  default: sbx
   values: 
   - test
   - sbx
