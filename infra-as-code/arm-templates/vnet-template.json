@@ -11,26 +11,17 @@
         "addressSpaces": {
             "type": "string"
         },
-        "subnetCount": {
-            "type": "int"
-        },
         "subnet0_name": {
             "type": "string"
         },
         "subnet0_addressRange": {
             "type": "string"
         },
-        "subnet0_serviceEndpoints": {
-            "type": "array"
-        },
         "subnet1_name": {
             "type": "string"
         },
         "subnet1_addressRange": {
             "type": "string"
-        },
-        "subnet1_serviceEndpoints": {
-            "type": "array"
         },
         "ddosProtectionPlanEnabled": {
             "type": "bool"
