@@ -9,6 +9,8 @@ parameters:
   type: string
 - name: storageaccount
   type: string
+- name: containername
+  type: string
 - name: hdiBaseName
   type: string
 - name: hdiHadoopLogin

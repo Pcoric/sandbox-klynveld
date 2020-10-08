@@ -21,24 +21,24 @@ parameters:
 - name: baseName
   type: string
   default: povl
-- name: vnet
+- name: environment
   type: string
-  default: hdivnet
-- name: addressSpaces
+  default: dev
+  values: 
+  - test
+  - dev
+- name: location
   type: string
-  default: 10.3.0.0/16
-- name: subnet0
+  default: eastus
+- name: serviceConnection
   type: string
-  default: default
-- name: subnet0addr
+  default: clientdemo
+- name: storageaccount
   type: string
-  default: 10.3.0.0/24
-- name: subnet1
+  default: sa
+- name: containername
   type: string
-  default: second
-- name: subnet1addr
-  type: string
-  default: 10.3.1.0/24
+  default: raw
 - name: hdiBaseName
   type: string
   default: libor
@@ -66,33 +66,24 @@ parameters:
 - name: sshUserName
   type: string
   default: "sshuser"
-- name: environment
+- name: vnet
   type: string
-  default: dev
-  values: 
-  - test
-  - dev
-- name: location
+  default: hdivnet
+- name: addressSpaces
   type: string
-  default: eastus
-- name: serviceConnection
+  default: 10.3.0.0/16
+- name: subnet0
   type: string
-  default: pavle-svc
-- name: workspacename
+  default: default
+- name: subnet0addr
   type: string
-  default: mls
-- name: storageaccount
+  default: 10.3.0.0/24
+- name: subnet1
   type: string
-  default: sa
-- name: secretname
+  default: second
+- name: subnet1addr
   type: string
-  default: bentleysecret
-- name: datastore
-  type: string
-  default: ds
-- name: containername
-  type: string
-  default: raw
+  default: 10.3.1.0/24
 
 
 stages:
@@ -106,6 +97,7 @@ stages:
       location: ${{ parameters.location }}
       serviceConnection:  ${{ parameters.serviceConnection }}
       storageaccount: ${{ parameters.storageaccount }}
+      containername: ${{ parameters.containername }}
       hdiBaseName: ${{ parameters.hdiBaseName }}
       hdiHadoopLogin: ${{ parameters.hdiHadoopLogin }}
       hdiHadoopPassword: ${{ parameters.hdiHadoopPassword }}
@@ -121,7 +113,6 @@ stages:
       subnet0addr: ${{ parameters.subnet0addr }}
       subnet1: ${{ parameters.subnet1 }}
       subnet1addr: ${{ parameters.subnet1addr }}
-      containername: ${{ parameters.containername }}
 
 
 
