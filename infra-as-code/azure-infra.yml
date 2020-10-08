@@ -58,7 +58,7 @@ jobs:
   - name: saContainer
     value: ${{ parameters.storageaccount }}-${{ parameters.containername }}
   - name: listKeys
-    value: "[listKeys('/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(storageaccount)', '2015-05-01-preview').key1]"
+    value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(storageaccount)"
   - name: vnetid
     value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}"
   - name: subnetId
