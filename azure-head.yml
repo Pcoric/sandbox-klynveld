@@ -20,13 +20,13 @@ trigger:
 parameters:
 - name: baseName
   type: string
-  default: povl
+  default: dignex
 - name: environment
   type: string
   default: dev
   values: 
   - test
-  - dev
+  - sbx
 - name: location
   type: string
   default: eastus
