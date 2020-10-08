@@ -62,7 +62,7 @@ jobs:
   - name: vnetid
     value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}"
   - name: subnetId
-    value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}/subnets/${{ subnet0 }}"
+    value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}/subnets/${{ parameters.subnet0 }}"
   - name: subnetId1
     value: ${{ parameters.vnet }}/${{ parameters.subnet0 }}
   steps:
