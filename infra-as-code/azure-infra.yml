@@ -39,6 +39,7 @@ parameters:
   type: string
 - name: subnet1addr
   type: string
+
 jobs:
 - job: BuildMLResources
   displayName: Build ML Resources
@@ -58,7 +59,7 @@ jobs:
     value: "[listKeys('/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(storageaccount)', '2015-05-01-preview').key1]"
   - name: vnetid
     value: "/subscriptions/$(subscriptionid)/resourceGroups/S(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}"
-    steps:
+  steps:
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build Storage Account for HDI data'
     inputs:
