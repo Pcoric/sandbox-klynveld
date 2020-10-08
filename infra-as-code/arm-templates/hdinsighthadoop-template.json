@@ -8,6 +8,12 @@
                 "description": "The name of the HDInsight cluster to create."
             }
         },
+        "resourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Used to pass the subnet vnet profile"
+            }
+        }
         "clusterLoginUserName": {
             "type": "string",
             "defaultValue": "admin",
@@ -165,7 +171,7 @@
                             },
                             "virtualNetworkProfile": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-                                "subnet": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('subnetName'))]"
+                                "subnet": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                             },
                             "scriptActions": [],
                             "dataDisksGroups": null
