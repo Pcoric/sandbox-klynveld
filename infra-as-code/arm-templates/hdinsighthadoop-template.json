@@ -148,7 +148,7 @@
                             "name": "[parameters('storageAccountLong')]",
                             "isDefault": true,
                             "container": "[parameters('containerName')]",
-                            "key": "[listKeys(parameters('listKeys'),'2015-05-01 preview').key1]"
+                            "key": "[listKeys(parameters('listKeys'),'2019-04-01').key1]"
                         }
                     ]
                 },
