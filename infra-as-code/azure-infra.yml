@@ -52,13 +52,13 @@ jobs:
   - name: resourceGroupLocation
     value: ${{ parameters.location }}
   - name: hdiHadoopName
-    value: ${{ parameters.hdiBaseName}}${{parameters.baseName}}hdp
+    value: ${{ parameters.hdiBaseName }}${{parameters.baseName}}hdp
   - name: storageAccountLong
-    value: ${{ parameters.storageaccount}}.blob.core.windows.net
+    value: ${{ parameters.storageaccount }}.blob.core.windows.net
   - name: saContainer
     value: ${{ parameters.storageaccount }}-${{ parameters.containername }}
   - name: listKeys
-    value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/$(storageaccount)"
+    value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Storage/storageAccounts/${{ parameters.storageaccount }}"
   - name: vnetid
     value: "/subscriptions/$(subscriptionid)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Network/virtualNetworks/${{ parameters.vnet}}"
   - name: subnetId

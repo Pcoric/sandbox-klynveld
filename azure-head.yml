@@ -23,7 +23,7 @@ parameters:
   default: dignex
 - name: environment
   type: string
-  default: sbx
+  default: sdbx
   values: 
   - test
   - sbx
@@ -36,7 +36,7 @@ parameters:
   default: clientdemo
 - name: storageaccount
   type: string
-  default: liborsa
+  default: sfdcsa
 - name: containername
   type: string
   default: raw
