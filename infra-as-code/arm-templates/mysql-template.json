@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2019-04-01-preview/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "administratorLogin": {
@@ -16,7 +16,7 @@
         },
         "skuCapacity": {
             "type": "int",
-            "defaultValue": 2,
+            "defaultValue": 4,
             "metadata": {
                 "description": "Azure database for MySQL compute capacity in vCores (2,4,8,16,32)"
             }

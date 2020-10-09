@@ -128,7 +128,7 @@ parameters:
   default: "GP_Gen5_2"
 - name: msqlskuSizeMB
   type: number
-  default: 51200
+  default: 512000
 - name: msqlskuTier
   type: string
   default: "GeneralPurpose"
