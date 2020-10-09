@@ -133,3 +133,4 @@
             "value": "[parameters('adminUsername')]"
         }
     }
+}
