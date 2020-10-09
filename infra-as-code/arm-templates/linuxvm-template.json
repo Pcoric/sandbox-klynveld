@@ -37,7 +37,17 @@
             "type": "secureString"
         },
         "zone": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "1",
+            "allowedValues": [
+                "1",
+                "2",
+                "3"
+            ],
+            "metadata": {
+                "description": "Zone number for the virtual machine"
+            }
+        
         }
     },
     "variables": {
