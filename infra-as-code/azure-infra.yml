@@ -98,7 +98,7 @@ jobs:
     value: ${{ parameters.computenodeName }}${{ parameters.nicBaseName}}
   - name: computeName
     value: ${{ parameters.baseName }}${{ parameters.computenodeName }}
-  - Name: computeVMComputerName
+  - name: computeVMComputerName
     value: $(computeName)-comp
   steps:
   - task: AzureResourceGroupDeployment@2
