@@ -84,8 +84,6 @@ jobs:
     value: ${{ parameters.hadoopBaseName }}${{parameters.baseName}}
   - name: hdiSparkName
     value: ${{ parameters.sparkBaseName }}${{ parameters.baseName}}
-  - name: storageAccountLong
-    value: ${{ parameters.storageaccount }}.blob.core.windows.net
   - name: saContainer
     value: ${{ parameters.storageaccount }}-${{ parameters.containername }}
   - name: listKeys
@@ -118,6 +116,10 @@ jobs:
     value: ${{ parameters.baseName }}${{ parameters.hadoopBaseName }}
   - name: spksa
     value: ${{ parameters.baseName }}${{ parameters.sparkBaseName }}
+  - name: hdpstorageAccountLong
+    value: $(hdpsa).blob.core.windows.net
+  - name: spkstorageAccountLong
+    value: $(spksa).blob.core.windows.net
   - name: mysqlname
     value: ${{ parameters.baseName }}${{ parameters.msqlserverName }}
   steps:
@@ -152,7 +154,7 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
-      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiHadoopName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(storageAccountLong) -containerName $(saContainer) -listKeys $(listKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
+      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiHadoopName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(hdpstorageAccountLong) -containerName $(saContainer) -listKeys $(listKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build HDInsight Spark Cluster'
     inputs:
@@ -160,7 +162,7 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
-      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiSparkName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(storageAccountLong) -containerName $(saContainer) -listKeys $(listKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
+      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiSparkName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(spkstorageAccountLong) -containerName $(saContainer) -listKeys $(listKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build App Node VM for Zaloni'
     inputs:
