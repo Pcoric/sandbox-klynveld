@@ -184,4 +184,4 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/mysql-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -serverName $(mysqlname) -skuCapacity ${{ parameters.msqlskuCapacity }} -skuName ${{ parameters.msqlskuName }}-skuSizeMB ${{ parameters.msqlskuSizeMB }} -skuTier ${{ parameters.msqlskuTier }} -skuFamily ${{ parameters.msqlskuFamily }}
+      overrideParameters: '-location ${{ parameters.location }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -serverName $(mysqlname) -skuCapacity ${{ parameters.msqlskuCapacity }} -skuName ${{ parameters.msqlskuName }}-skuSizeMB ${{ parameters.msqlskuSizeMB }} -skuTier ${{ parameters.msqlskuTier }} -skuFamily ${{ parameters.msqlskuFamily }}'
