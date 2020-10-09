@@ -40,9 +40,12 @@ parameters:
 - name: containername
   type: string
   default: raw
-- name: hdiBaseName
+- name: hadoopBaseName
   type: string
-  default: libor
+  default: hdp
+- name: sparkBaseName
+  type: string
+  default: spr
 - name: hdiHadoopLogin
   type: string
   default: kadim
@@ -64,6 +67,14 @@ parameters:
 - name: clusterKind
   type: string
   default: "HADOOP"
+  values: 
+  - "HADOOP"
+  - "SPARK"
+- name: clusterKind2
+  default: "SPARK"
+  values: 
+  - "HADOOP"
+  - "SPARK"
 - name: sshUserName
   type: string
   default: "sshuser"
@@ -75,16 +86,37 @@ parameters:
   default: 10.3.0.0/16
 - name: subnet0
   type: string
-  default: default
+  default: datasubnet
 - name: subnet0addr
   type: string
   default: 10.3.0.0/24
 - name: subnet1
   type: string
-  default: second
+  default: appsubnet
 - name: subnet1addr
   type: string
   default: 10.3.1.0/24
+- name: subnet2
+  type: string
+  default: aads
+- name: subnet2addr
+  type: string
+  default: 10.3.2.0/24
+- name: appnodeName
+  type: string
+  default: appnode
+- name: computenodeName
+  type: string
+  default: computenode
+- name: nsgBase
+  type: string
+  default: nsg
+- name: nicBaseName
+  type: string
+  default: nic
+- name: vmsize
+  type: string
+  default: "Standard_D2_V2"
 
 
 stages:
@@ -99,7 +131,8 @@ stages:
       serviceConnection:  ${{ parameters.serviceConnection }}
       storageaccount: ${{ parameters.storageaccount }}
       containername: ${{ parameters.containername }}
-      hdiBaseName: ${{ parameters.hdiBaseName }}
+      hadoopBaseName: ${{ parameters.hadoopBaseName }}
+      sparkBaseName: ${{ parameters.sparkBaseName}}
       hdiHadoopLogin: ${{ parameters.hdiHadoopLogin }}
       hdiHadoopPassword: ${{ parameters.hdiHadoopPassword }}
       hdiVersion: ${{ parameters.hdiVersion }}
@@ -107,6 +140,7 @@ stages:
       clusterWorkerCountMax: ${{ parameters.clusterWorkerCountMax }}
       clusterWorkerSize: ${{ parameters.clusterWorkerSize }}
       clusterKind: ${{ parameters.clusterKind }}
+      clusterKind2: ${{ parameters.clusterKind2 }}
       sshUserName: ${{ parameters.sshUserName }}
       vnet: ${{ parameters.vnet }}
       addressSpaces: ${{ parameters.addressSpaces }}
@@ -114,6 +148,16 @@ stages:
       subnet0addr: ${{ parameters.subnet0addr }}
       subnet1: ${{ parameters.subnet1 }}
       subnet1addr: ${{ parameters.subnet1addr }}
+      subnet2: ${{ parameters.subnet2 }}
+      subnet2addr: ${{ parameters.subnet2addr }}
+      appnodeName: ${[ parameters.appnodeName]}
+      computenodeName: ${{ parameters.computenodeName }}
+      nsgBase: ${{ parameters.nsgBase }}
+      nicBaseName: ${{ parameters.nicBaseName }}
+      vmsize: ${{ parameters.vmsize }}
+
+
+
 
 
 

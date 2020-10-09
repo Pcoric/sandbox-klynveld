@@ -23,6 +23,12 @@
         "subnet1_addressRange": {
             "type": "string"
         },
+        "subnet2_name": {
+            "type": "string"
+        },
+        "subnet2_addressRange": {
+            "type": "string"
+        },
         "ddosProtectionPlanEnabled": {
             "type": "bool",
             "defaultValue": false
@@ -62,6 +68,20 @@
                         "name": "[parameters('subnet1_name')]",
                         "properties": {
                             "addressPrefix": "[parameters('subnet1_addressRange')]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Sql"
+                                },
+                                {
+                                    "service": "Microsoft.EventHub"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet2_name')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnet2_addressRange')]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.Sql"
