@@ -25,7 +25,7 @@
         },
         "osDiskType": {
             "type": "string",
-            "defaultValue": "Standard SSD"
+            "defaultValue": "Standard_LRS"
         },
         "virtualMachineSize": {
             "type": "string"
