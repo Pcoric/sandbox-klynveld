@@ -16,7 +16,7 @@
         },
         "skuCapacity": {
             "type": "int",
-            "defaultValue": 4,
+            "defaultValue": 2,
             "metadata": {
                 "description": "Azure database for MySQL compute capacity in vCores (2,4,8,16,32)"
             }

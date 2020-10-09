@@ -122,7 +122,7 @@ parameters:
   default: zalsql
 - name: msqlskuCapacity
   type: number
-  default: 4
+  default: 2
 - name: msqlskuName
   type: string
   default: "GP_Gen5_2"
