@@ -23,7 +23,7 @@ parameters:
   default: dignex
 - name: environment
   type: string
-  default: sbx
+  default: sdbx
   values: 
   - test
   - sbx
@@ -117,6 +117,24 @@ parameters:
 - name: vmsize
   type: string
   default: "Standard_D2_V2"
+- name: msqlserverName
+  type: string
+  default: zalsql
+- name: msqlskuCapacity
+  type: number
+  default: 4
+- name: msqlskuName
+  type: string
+  default: "GP_Gen5_2"
+- name: msqlskuSizeMB
+  type: number
+  default: 51200
+- name: msqlskuTier
+  type: string
+  default: "GeneralPurpose"
+- name: msqlskuFamily
+  type: string
+  default: "Gen5"
 
 
 stages:
@@ -155,6 +173,12 @@ stages:
       nsgBase: ${{ parameters.nsgBase }}
       nicBaseName: ${{ parameters.nicBaseName }}
       vmsize: ${{ parameters.vmsize }}
+      msqlserverName: ${{ parameters.msqlserverName }}
+      msqlskuCapacity: ${{ parameters.msqlskuCapacity }}
+      msqlskuName: ${{ parameters.msqlskuName }}
+      msqlskuSizeMB: ${{ parameters.msqlskuSizeMB }}
+      msqlskuTier: ${{ parameters.msqlskuTier }}
+      msqlskuFamily: ${{ parameters.msqlskuFamily }}
 
 
 

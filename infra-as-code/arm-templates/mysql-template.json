@@ -1,0 +1,112 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "type": "string"
+        },
+        "administratorLoginPassword": {
+            "type": "securestring"
+        },
+        "location": {
+            "type": "string"
+        },
+        "serverName": {
+            "type": "string"
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Azure database for MySQL compute capacity in vCores (2,4,8,16,32)"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "GP_Gen5_2",
+            "metadata": {
+                "description": "Azure database for MySQL sku name "
+            }
+        },
+        "skuSizeMB": {
+            "type": "int",
+            "defaultValue": 51200,
+            "metadata": {
+                "description": "Azure database for MySQL Sku Size "
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "GeneralPurpose",
+            "metadata": {
+                "description": "Azure database for MySQL pricing tier"
+            }
+        },
+        "skuFamily": {
+            "type": "string",
+            "defaultValue": "Gen5",
+            "metadata": {
+                "description": "Azure database for MySQL sku family"
+            }
+        },
+        "version": {
+            "type": "string",
+            "defaultValue": "5.7"
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 11
+        },
+        "geoRedundantBackup": {
+            "type": "string",
+            "defaultValue": "Locally redundant"
+        },
+        "previewFeature": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "tags": {
+            "type": "object",
+            "defaultValue": {}
+        },
+        "storageAutoGrow": {
+            "type": "string",
+            "defaultValue": "Enabled"
+        },
+        "infrastructureEncryption": {
+            "type": "string",
+            "defaultValue": "Disabled"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-12-01-preview",
+            "kind": "",
+            "location": "[parameters('location')]",
+            "name": "[parameters('serverName')]",
+            "properties": {
+                "version": "[parameters('version')]",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "storageProfile": {
+                    "storageMB": "[parameters('skuSizeMB')]",
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]",
+                    "storageAutoGrow": "[parameters('storageAutoGrow')]"
+                },
+                "previewFeature": "[parameters('previewFeature')]",
+                "infrastructureEncryption": "[parameters('infrastructureEncryption')]"
+            },
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]",
+                "size": "[parameters('skuSizeMB')]",
+                "family": "[parameters('skuFamily')]"
+            },
+            "tags": "[parameters('tags')]",
+            "type": "Microsoft.DBforMySQL/servers"
+        }
+    ],
+    "variables": {}
+}
