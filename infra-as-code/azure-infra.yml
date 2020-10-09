@@ -98,7 +98,7 @@ jobs:
   - name: computensgname
     value: ${{ parameters.computenodeName }}${{ parameters.nsgBase }}
   - name: computenicname
-    value: ${{ parameters.computenodeName }}${{ parameters.nicBaseName}}
+    value: ${{ parameters.computenodeName }}${{ parameters.nicBaseName }}
   - name: computeName
     value: ${{ parameters.baseName }}${{ parameters.computenodeName }}
   - name: computeVMComputerName

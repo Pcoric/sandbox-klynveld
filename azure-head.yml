@@ -150,7 +150,7 @@ stages:
       subnet1addr: ${{ parameters.subnet1addr }}
       subnet2: ${{ parameters.subnet2 }}
       subnet2addr: ${{ parameters.subnet2addr }}
-      appnodeName: ${[ parameters.appnodeName]}
+      appnodeName: ${{ parameters.appnodeName }}
       computenodeName: ${{ parameters.computenodeName }}
       nsgBase: ${{ parameters.nsgBase }}
       nicBaseName: ${{ parameters.nicBaseName }}
