@@ -104,14 +104,14 @@ jobs:
   - name: computeVMComputerName
     value: $(computeName)-comp
   steps:
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Storage Account for HDI data'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/storage-template.json'
-      overrideParameters: '-saname ${{ parameters.storageaccount }} -location ${{ parameters.location }}' 
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build Storage Account for HDI data'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/storage-template.json'
+      #overrideParameters: '-saname ${{ parameters.storageaccount }} -location ${{ parameters.location }}' 
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build Virtual Network for HDI & Linux VMs'
     inputs:
@@ -142,6 +142,6 @@ jobs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/linux-template.json'
+      csmFile: 'infra-as-code/arm-templates/linuxvm-template.json'
       overrideParameters: '-location ${{ parameters.location }} -networkInterfaceName $(appnicname) -networkSecurityGroupName $(appnicname) -subnetName ${{ parameters.subnet1 }} -adminUsername ${{ parameters.hdiHadoopLogin }} -adminPassword ${{parameters.hdiHadoopPassword}} -virtualNetworkId $(vnetid) -virtualMachineName $(appName) -virtualMachineSize ${{ parameters.vmsize }} -virtualMachineComputerName $(appVMComputerName)' 
     
