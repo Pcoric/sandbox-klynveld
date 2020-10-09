@@ -59,7 +59,7 @@
         },
         "geoRedundantBackup": {
             "type": "string",
-            "defaultValue": "Locally redundant"
+            "defaultValue": "Disabled"
         },
         "previewFeature": {
             "type": "string",
