@@ -45,6 +45,9 @@ parameters:
   type: string
 - name: subnet1addr
   type: string
+- name: subnet2
+  type: string
+- name: subnetaddr2
 - name: appnodeName
   type: string
 - name: computenodeName
