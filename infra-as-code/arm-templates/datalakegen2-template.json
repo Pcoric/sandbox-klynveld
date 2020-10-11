@@ -33,7 +33,7 @@
      },
     "variables": {
         "storageAccountApiVersion": "[utils.apiVersion('Microsoft.Storage', 'storageAccounts')]",
-        "storageAccountName": "[utils.uniqueName(parameters('resourcePrefix'), 'store')]",
+        "storageAccountName": "[concat(parameters('resourcePrefix'), 'store')]",
         "storageAccountResourceId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
     },
     "functions": [
@@ -54,22 +54,6 @@
                     "output": {
                         "type": "string",
                         "value": "[providers(parameters('providerNamespace'), parameters('resourceType')).apiVersions[0]]"
-                    }
-                },
-                "uniqueName": {
-                    "parameters": [
-                        {
-                            "name": "resourcePrefix",
-                            "type": "string"
-                        },
-                        {
-                            "name": "resourceSuffix",
-                            "type": "string"
-                        }
-                    ],
-                    "output": {
-                        "type": "string",
-                        "value": "[concat(parameters('resourcePrefix'), uniqueString(resourceGroup().id), parameters('resourceSuffix'))]"
                     }
                 }
             }
