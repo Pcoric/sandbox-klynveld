@@ -1,0 +1,117 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.1",
+  "parameters": {
+    "managedInstanceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Enter managed instance name."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "Enter user name."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Enter password."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Enter location. If you leave this field blank resource group location would be used."
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "SQLMI-VNET",
+      "metadata": {
+        "description": "Enter virtual network name. If you leave this field blank name will be created by the template."
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "ManagedInstance",
+      "metadata": {
+        "description": "Enter subnet name."
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "GP_Gen5",
+      "allowedValues": [
+        "GP_Gen5",
+        "BC_Gen5"
+      ],
+      "metadata": {
+        "description": "Enter sku name."
+      }
+    },
+    "vCores": {
+      "type": "int",
+      "defaultValue": 16,
+      "allowedValues": [
+        8,
+        16,
+        24,
+        32,
+        40,
+        64,
+        80
+      ],
+      "metadata": {
+        "description": "Enter number of vCores."
+      }
+    },
+    "storageSizeInGB": {
+      "type": "int",
+      "defaultValue": 256,
+      "minValue": 32,
+      "maxValue": 8192,
+      "metadata": {
+        "description": "Enter storage size."
+      }
+    },
+    "licenseType": {
+      "type": "string",
+      "defaultValue": "BasePrice",
+      "allowedValues": [
+        "BasePrice",
+        "LicenseIncluded"
+      ],
+      "metadata": {
+        "description": "Enter license type."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/managedInstances",
+      "apiVersion": "2020-02-02-preview",
+      "name": "[parameters('managedInstanceName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('skuName')]"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[parameters('virtualNetworkName')]"
+      ],
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+        "storageSizeInGB": "[parameters('storageSizeInGB')]",
+        "vCores": "[parameters('vCores')]",
+        "licenseType": "[parameters('licenseType')]"
+      }
+    }
+  ]
+}

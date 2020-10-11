@@ -126,6 +126,9 @@ parameters:
 - name: msqlskuName
   type: string
   default: "GP_Gen5_2"
+- name: sqlSkuName
+  type: string
+  default: "GP_Gen5"
 - name: msqlskuSizeMB
   type: number
   default: 512000
@@ -135,6 +138,15 @@ parameters:
 - name: msqlskuFamily
   type: string
   default: "Gen5"
+- name: managedInstanceName
+  type: string
+  default: midb
+- name: vcores
+  type: number
+  default: 32
+- name: storageSizeInGB
+  type: number
+  default: 1024
 
 
 stages:
@@ -176,9 +188,13 @@ stages:
       msqlserverName: ${{ parameters.msqlserverName }}
       msqlskuCapacity: ${{ parameters.msqlskuCapacity }}
       msqlskuName: ${{ parameters.msqlskuName }}
+      sqlSkuName: ${{ parameters.sqlSkuName }}
       msqlskuSizeMB: ${{ parameters.msqlskuSizeMB }}
       msqlskuTier: ${{ parameters.msqlskuTier }}
       msqlskuFamily: ${{ parameters.msqlskuFamily }}
+      managedInstanceName: ${{ parameters.managedInstanceName }}
+      vcores: ${{ parameters.vcores }}
+      storageSizeInGB: ${{ parameters.storageSizeInGB }}
 
 
 

@@ -64,12 +64,20 @@ parameters:
   type: number
 - name: msqlskuName
   type: string
+- name: sqlSkuName
+  type: string
 - name: msqlskuSizeMB
   type: number
 - name: msqlskuTier
   type: string
 - name: msqlskuFamily
   type: string
+- name: managedInstanceName
+  type: string
+- name: vcores
+  type: number
+- name: storageSizeInGB
+  type: number
 
 jobs:
 - job: BuildMLResources
@@ -124,68 +132,79 @@ jobs:
     value: $(spksa).blob.core.windows.net
   - name: mysqlname
     value: ${{ parameters.baseName }}${{ parameters.msqlserverName }}
+  - name: sqlServerName
+    value: ${{ parameters.baseName }}${{ parameters.managedInstanceName }}
   steps:
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build Storage Account for HDI hadoop'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/storage-template.json'
+      #overrideParameters: '-saname $(hdpsa) -location ${{ parameters.location }}' 
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build Storage Account for HDI spark'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/storage-template.json'
+      #overrideParameters: '-saname $(spksa) -location ${{ parameters.location }}' 
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build Virtual Network for HDI & Linux VMs'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/vnet-template.json'
+      #overrideParameters: '-virtualNetworkName ${{ parameters.vnet}} -addressSpaces ${{ parameters.addressSpaces }} -location ${{ parameters.location }} -subnet0_name ${{ parameters.subnet0 }} -subnet0_addressRange ${{ parameters.subnet0addr }} -subnet1_name ${{ parameters.subnet1 }} -subnet1_addressRange ${{ parameters.subnet1addr }} -subnet2_name ${{ parameters.subnet2 }} -subnet2_addressRange ${{ parameters.subnet2addr }}'
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build HDInsight Hadoop Cluster'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
+      #overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiHadoopName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(hdpstorageAccountLong) -containerName $(saContainer) -listKeys $(hdpListKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build HDInsight Spark Cluster'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
+      #overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiSparkName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(spkstorageAccountLong) -containerName $(saContainer) -listKeys $(spkListKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build App Node VM for Zaloni'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/linuxvm-template.json'
+      #overrideParameters: '-location ${{ parameters.location }} -networkInterfaceName $(appnicname) -networkSecurityGroupName $(appnsgname) -subnetName ${{ parameters.subnet1 }} -adminUsername ${{ parameters.hdiHadoopLogin }} -adminPassword ${{parameters.hdiHadoopPassword}} -virtualNetworkId $(vnetid) -virtualMachineName $(appName) -virtualMachineSize ${{ parameters.vmsize }} -virtualMachineComputerName $(appVMComputerName)' 
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build Compute Node VM for Zaloni'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/linuxvm-template.json'
+      #overrideParameters: '-location ${{ parameters.location }} -networkInterfaceName $(computenicname) -networkSecurityGroupName $(computensgname) -subnetName ${{ parameters.subnet1 }} -adminUsername ${{ parameters.hdiHadoopLogin }} -adminPassword ${{parameters.hdiHadoopPassword}} -virtualNetworkId $(vnetid) -virtualMachineName $(computeName) -virtualMachineSize ${{ parameters.vmsize }} -virtualMachineComputerName $(computeVMComputerName)' 
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build MySQL instance for Zaloni'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/mysql-template.json'
+      #overrideParameters: '-location ${{ parameters.location }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -serverName $(mysqlname) -skuCapacity ${{ parameters.msqlskuCapacity }} -skuName ${{ parameters.msqlskuName }} -skuSizeMB ${{ parameters.msqlskuSizeMB }} -skuTier ${{ parameters.msqlskuTier }} -skuFamily ${{ parameters.msqlskuFamily }}'
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Storage Account for HDI hadoop'
+    displayName: 'Build SQL Server instance'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/storage-template.json'
-      overrideParameters: '-saname $(hdpsa) -location ${{ parameters.location }}' 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Storage Account for HDI spark'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/storage-template.json'
-      overrideParameters: '-saname $(spksa) -location ${{ parameters.location }}' 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Virtual Network for HDI & Linux VMs'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/vnet-template.json'
-      overrideParameters: '-virtualNetworkName ${{ parameters.vnet}} -addressSpaces ${{ parameters.addressSpaces }} -location ${{ parameters.location }} -subnet0_name ${{ parameters.subnet0 }} -subnet0_addressRange ${{ parameters.subnet0addr }} -subnet1_name ${{ parameters.subnet1 }} -subnet1_addressRange ${{ parameters.subnet1addr }} -subnet2_name ${{ parameters.subnet2 }} -subnet2_addressRange ${{ parameters.subnet2addr }}'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build HDInsight Hadoop Cluster'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
-      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiHadoopName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(hdpstorageAccountLong) -containerName $(saContainer) -listKeys $(hdpListKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build HDInsight Spark Cluster'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/hdinsight-template.json'
-      overrideParameters: '-resourceGroupName $(resourceGroupName) -clusterName $(hdiSparkName) -clusterLoginUserName ${{ parameters.hdiHadoopLogin }} -clusterLoginPassword ${{parameters.hdiHadoopPassword}} -location ${{ parameters.location }} -clusterVersion ${{ parameters.hdiVersion }} -clusterWorkerCountMin ${{ parameters.clusterWorkerCountMin }} -clusterWorkerCountMax ${{ parameters.clusterWorkerCountMax }} -clusterWorkerNodeSize ${{ parameters.clusterWorkerSize }} -clusterKind ${{ parameters.clusterKind }} -sshUserName ${{parameters.sshUserName }} -sshPassword ${{ parameters.hdiHadoopPassword }} -storageAccountLong $(spkstorageAccountLong) -containerName $(saContainer) -listKeys $(spkListKeys) -virtualNetworkName ${{ parameters.vnet }} -subnetName $(subnetId1)'
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build App Node VM for Zaloni'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/linuxvm-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -networkInterfaceName $(appnicname) -networkSecurityGroupName $(appnsgname) -subnetName ${{ parameters.subnet1 }} -adminUsername ${{ parameters.hdiHadoopLogin }} -adminPassword ${{parameters.hdiHadoopPassword}} -virtualNetworkId $(vnetid) -virtualMachineName $(appName) -virtualMachineSize ${{ parameters.vmsize }} -virtualMachineComputerName $(appVMComputerName)' 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build Compute Node VM for Zaloni'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/linuxvm-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -networkInterfaceName $(computenicname) -networkSecurityGroupName $(computensgname) -subnetName ${{ parameters.subnet1 }} -adminUsername ${{ parameters.hdiHadoopLogin }} -adminPassword ${{parameters.hdiHadoopPassword}} -virtualNetworkId $(vnetid) -virtualMachineName $(computeName) -virtualMachineSize ${{ parameters.vmsize }} -virtualMachineComputerName $(computeVMComputerName)' 
-  - task: AzureResourceGroupDeployment@2
-    displayName: 'Build MySQL instance for Zaloni'
-    inputs:
-      azureSubscription: ${{ parameters.serviceConnection }}
-      resourceGroupName: $(resourceGroupName)
-      location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/mysql-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -serverName $(mysqlname) -skuCapacity ${{ parameters.msqlskuCapacity }} -skuName ${{ parameters.msqlskuName }} -skuSizeMB ${{ parameters.msqlskuSizeMB }} -skuTier ${{ parameters.msqlskuTier }} -skuFamily ${{ parameters.msqlskuFamily }}'
+      csmFile: 'infra-as-code/arm-templates/sqlserver-template.json'
+      overrideParameters: '-location ${{ parameters.location }} -managedInstanceName $(sqlServerName) -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -virtualNetworkName ${{ parameters.vnet }} -subnetName ${{ parameters.subnet0 }} -skuName: ${{ parameters.sqlSkuName }} -vCores ${{ parameters.vcores }} -storageSizeInGB ${{ parameters.storageSizeInGB }}'
+  
