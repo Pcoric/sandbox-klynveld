@@ -78,6 +78,8 @@ parameters:
   type: string
 - name: namespaceName
   type: string
+- name: dataLakeName
+  type: string
 
 jobs:
 - job: BuildMLResources
@@ -138,6 +140,8 @@ jobs:
     value: ${{ parameters.baseName }}${{ parameters.ehCluster }}
   - name: eventHubsName
     value: ${{ parameters.baseName }}${{ parameters.namespaceName }}
+  - name: dlprefix
+    value: ${{ parameters.baseName }}${{ parameters.dataLakeName }}
   steps:
   #- task: AzureResourceGroupDeployment@2
     #displayName: 'Build Storage Account for HDI hadoop'
@@ -212,11 +216,19 @@ jobs:
       #csmFile: 'infra-as-code/arm-templates/sqlserver-template.json'
       #overrideParameters: '-location ${{ parameters.location }} -serverName $(sqlServerName) -sqlDBName ${{ parameters.dbName }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }}'
   - task: AzureResourceGroupDeployment@2
-    displayName: 'Build EventHubs instance'
+    displayName: 'Build Data Lake instance'
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/eventhubs-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -clusterName $(ehClusterName) -namespaceName $(eventHubsName)'
+      overrideParameters: '-location ${{ parameters.location }} -resourcePrefix $(dlprefix)'  
+  #- task: AzureResourceGroupDeployment@2
+    #displayName: 'Build EventHubs instance'
+    #inputs:
+      #azureSubscription: ${{ parameters.serviceConnection }}
+      #resourceGroupName: $(resourceGroupName)
+      #location: $(resourceGroupLocation)
+      #csmFile: 'infra-as-code/arm-templates/eventhubs-template.json'
+      #overrideParameters: '-location ${{ parameters.location }} -clusterName $(ehClusterName) -namespaceName $(eventHubsName)'
    

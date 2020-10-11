@@ -147,8 +147,9 @@ parameters:
 - name: namespaceName
   type: string
   default: ehnamespace
-
-
+- name: dataLakeName
+  type: string
+  default: kp
 
 stages:
 - stage: BuildInfra
@@ -196,6 +197,7 @@ stages:
       sqlName: ${{ parameters.sqlName }}
       ehCluster: ${{ parameters.ehCluster }}
       namespaceName: ${{ parameters.namespaceName }}
+      dataLakeName: ${{ parameters.dataLakeName }}
 
 
 
