@@ -138,15 +138,10 @@ parameters:
 - name: msqlskuFamily
   type: string
   default: "Gen5"
-- name: managedInstanceName
+- name: sqlName
   type: string
   default: midb
-- name: vcores
-  type: number
-  default: 32
-- name: storageSizeInGB
-  type: number
-  default: 1024
+
 
 
 stages:
@@ -192,10 +187,7 @@ stages:
       msqlskuSizeMB: ${{ parameters.msqlskuSizeMB }}
       msqlskuTier: ${{ parameters.msqlskuTier }}
       msqlskuFamily: ${{ parameters.msqlskuFamily }}
-      managedInstanceName: ${{ parameters.managedInstanceName }}
-      vcores: ${{ parameters.vcores }}
-      storageSizeInGB: ${{ parameters.storageSizeInGB }}
-
+      sqlName: ${{ parameters.sqlName }}
 
 
 

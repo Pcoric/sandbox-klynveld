@@ -72,12 +72,8 @@ parameters:
   type: string
 - name: msqlskuFamily
   type: string
-- name: managedInstanceName
+- name: sqlName
   type: string
-- name: vcores
-  type: number
-- name: storageSizeInGB
-  type: number
 
 jobs:
 - job: BuildMLResources
@@ -133,7 +129,7 @@ jobs:
   - name: mysqlname
     value: ${{ parameters.baseName }}${{ parameters.msqlserverName }}
   - name: sqlServerName
-    value: ${{ parameters.baseName }}${{ parameters.managedInstanceName }}
+    value: ${{ parameters.baseName }}${{ parameters.sqlName }}
   steps:
   #- task: AzureResourceGroupDeployment@2
     #displayName: 'Build Storage Account for HDI hadoop'
@@ -206,5 +202,5 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/sqlserver-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -managedInstanceName $(sqlServerName) -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }} -virtualNetworkName ${{ parameters.vnet }} -subnetName ${{ parameters.subnet0 }} -skuName ${{ parameters.sqlSkuName }} -vCores ${{ parameters.vcores }} -storageSizeInGB ${{ parameters.storageSizeInGB }}'
+      overrideParameters: '-location ${{ parameters.location }} -serverName $(sqlServerName) -sqlDBName {{ $parameters.dbName }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }}'
   
