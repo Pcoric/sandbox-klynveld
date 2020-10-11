@@ -221,7 +221,7 @@ jobs:
       azureSubscription: ${{ parameters.serviceConnection }}
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
-      csmFile: 'infra-as-code/arm-templates/eventhubs-template.json'
+      csmFile: 'infra-as-code/arm-templates/datalakegen2-template.json'
       overrideParameters: '-location ${{ parameters.location }} -resourcePrefix $(dlprefix)'  
   #- task: AzureResourceGroupDeployment@2
     #displayName: 'Build EventHubs instance'
