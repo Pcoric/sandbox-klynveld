@@ -137,7 +137,7 @@ jobs:
   - name: ehClusterName
     value: ${{ parameters.baseName }}${{ parameters.ehCluster }}
   - name: eventHubsName
-    value: ${{ parameters.baseName }}${{ parametefrs.namespaceName }}
+    value: ${{ parameters.baseName }}${{ parameters.namespaceName }}
   steps:
   #- task: AzureResourceGroupDeployment@2
     #displayName: 'Build Storage Account for HDI hadoop'
