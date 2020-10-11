@@ -101,9 +101,7 @@
       "identity": {
         "type": "SystemAssigned"
       },
-      "dependsOn": [
-        "[parameters('virtualNetworkName')]"
-      ],
+      "dependsOn": [],
       "properties": {
         "administratorLogin": "[parameters('administratorLogin')]",
         "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
