@@ -141,6 +141,12 @@ parameters:
 - name: sqlName
   type: string
   default: midb
+- name: ehCluster
+  type: string
+  default: ehCluster
+- name: namespaceName
+  type: string
+  default: ehnamespace
 
 
 
@@ -188,6 +194,8 @@ stages:
       msqlskuTier: ${{ parameters.msqlskuTier }}
       msqlskuFamily: ${{ parameters.msqlskuFamily }}
       sqlName: ${{ parameters.sqlName }}
+      ehCluster: ${{ parameters.ehCluster }}
+      namespaceName: ${{ parameters.namespaceName }}
 
 
 
