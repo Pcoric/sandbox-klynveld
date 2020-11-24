@@ -214,7 +214,7 @@ jobs:
       resourceGroupName: $(resourceGroupName)
       location: $(resourceGroupLocation)
       csmFile: 'infra-as-code/arm-templates/sqlserver-template.json'
-      overrideParameters: '-location ${{ parameters.location }} -serverName $(sqlServerName) -sqlDBName ${{ parameters.dbName }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }}'
+      overrideParameters: '-location ${{ parameters.location }} -serverName $(sqlServerName) -sqlDBName ${{ parameters.sqlServerName }} -administratorLogin ${{ parameters.hdiHadoopLogin }} -administratorLoginPassword ${{ parameters.hdiHadoopPassword }}'
   - task: AzureResourceGroupDeployment@2
     displayName: 'Build Data Lake instance'
     inputs:
