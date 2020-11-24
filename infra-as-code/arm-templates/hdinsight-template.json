@@ -132,7 +132,7 @@
                 "clusterDefinition": {
                     "kind": "[parameters('clusterKind')]",
                     "componentVersion": {
-                        "Hadoop": "2.7"
+                        "Hadoop": "3.1"
                     },
                     "configurations": {
                         "gateway": {

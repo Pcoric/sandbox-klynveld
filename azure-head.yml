@@ -54,7 +54,7 @@ parameters:
   default: Password1.!!
 - name: hdiVersion
   type: string
-  default: 3.6
+  default: 4.0
 - name: clusterWorkerCountMin
   type: number
   default: 5
